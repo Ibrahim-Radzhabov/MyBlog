@@ -1,0 +1,102 @@
+import { expect, test } from "@playwright/test";
+
+const adminEmail = process.env.E2E_ADMIN_EMAIL;
+const adminPassword = process.env.E2E_ADMIN_PASSWORD;
+
+const canRunAdminCrud = Boolean(
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+    process.env.ADMIN_EMAIL &&
+    adminEmail &&
+    adminPassword
+);
+
+async function loginAsAdmin(page: import("@playwright/test").Page) {
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(adminEmail!);
+  await page.getByLabel("Password").fill(adminPassword!);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL(/\/admin/);
+}
+
+test.describe("admin CRUD with confirmations", () => {
+  test.skip(!canRunAdminCrud, "Set Supabase env + E2E admin creds to run CRUD checks.");
+
+  test("admin can create, publish, and delete prompt with taxonomy", async ({ page }) => {
+    const suffix = `${Date.now()}`;
+    const categoryName = `E2E Category ${suffix}`;
+    const categorySlug = `e2e-category-${suffix}`;
+    const tagName = `E2E Tag ${suffix}`;
+    const tagSlug = `e2e-tag-${suffix}`;
+
+    const promptTitle = `E2E Prompt ${suffix}`;
+    const promptSlug = `e2e-prompt-${suffix}`;
+
+    await loginAsAdmin(page);
+
+    await page.goto("/admin/categories");
+    await page.getByTestId("category-create-form").getByPlaceholder("Category name").fill(categoryName);
+    await page.getByTestId("category-create-form").getByPlaceholder("category-slug (optional)").fill(categorySlug);
+    await page.getByTestId("category-create-form").getByRole("button", { name: "Create" }).click();
+    await expect(page.locator(`input[name="slug"][value="${categorySlug}"]`)).toBeVisible();
+
+    await page.goto("/admin/tags");
+    await page.getByTestId("tag-create-form").getByPlaceholder("Tag name").fill(tagName);
+    await page.getByTestId("tag-create-form").getByPlaceholder("tag-slug (optional)").fill(tagSlug);
+    await page.getByTestId("tag-create-form").getByRole("button", { name: "Create" }).click();
+    await expect(page.locator(`input[name="slug"][value="${tagSlug}"]`)).toBeVisible();
+
+    await page.goto("/admin/prompts/new");
+    await page.getByLabel("Title").fill(promptTitle);
+    await page.getByLabel("Slug").fill(promptSlug);
+    await page.getByLabel("Short description").fill(
+      "This prompt is created by Playwright to validate create and publish flow end-to-end."
+    );
+    await page
+      .getByLabel("Prompt content (markdown-friendly)")
+      .fill("You are a helpful assistant. Return a concise response for {{topic}} in bullet points.");
+    await page.getByLabel("Output example").fill("- Point one\n- Point two");
+    await page.getByLabel("Category").selectOption({ label: categoryName });
+    await page.getByRole("button", { name: `#${tagName}` }).click();
+
+    await page.getByRole("button", { name: "Save as draft" }).click();
+    await expect(page).toHaveURL(/\/admin\/prompts/);
+
+    const promptRow = page.getByRole("row", { name: new RegExp(promptTitle) });
+    await expect(promptRow).toBeVisible();
+    await expect(promptRow.getByText("Draft")).toBeVisible();
+
+    await promptRow.getByRole("button", { name: "Publish" }).click();
+    await expect(promptRow.getByRole("button", { name: "Unpublish" })).toBeVisible();
+
+    await promptRow.getByRole("link", { name: "Edit" }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/prompts/.+/edit`));
+
+    await page
+      .getByLabel("Short description")
+      .fill("Updated from e2e flow to verify edit action, publish state, and audit trail logging.");
+    await page.getByRole("button", { name: "Update & publish" }).click();
+    await expect(page).toHaveURL(/\/admin\/prompts/);
+
+    await page.getByTestId(`delete-prompt-${promptSlug}-trigger`).click();
+    await expect(page.getByTestId(`delete-prompt-${promptSlug}-modal`)).toBeVisible();
+    await page.getByTestId(`delete-prompt-${promptSlug}-confirm`).click();
+
+    await expect(page.getByRole("row", { name: new RegExp(promptTitle) })).toHaveCount(0);
+
+    await page.goto("/admin/categories");
+    await page.getByTestId(`delete-category-${categorySlug}-trigger`).click();
+    await page.getByTestId(`delete-category-${categorySlug}-confirm`).click();
+    await expect(page.locator(`input[name="slug"][value="${categorySlug}"]`)).toHaveCount(0);
+
+    await page.goto("/admin/tags");
+    await page.getByTestId(`delete-tag-${tagSlug}-trigger`).click();
+    await page.getByTestId(`delete-tag-${tagSlug}-confirm`).click();
+    await expect(page.locator(`input[name="slug"][value="${tagSlug}"]`)).toHaveCount(0);
+
+    await page.goto("/admin");
+    await expect(page.getByRole("heading", { name: "Audit trail" })).toBeVisible();
+    await expect(page.getByText("prompt.create")).toBeVisible();
+    await expect(page.getByText("prompt.delete")).toBeVisible();
+  });
+});
