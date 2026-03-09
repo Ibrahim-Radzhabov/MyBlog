@@ -20,6 +20,14 @@ type SearchParams = Promise<{
 export const metadata: Metadata = {
   title: "Prompts",
   description: "Explore published prompts with fast search and category filtering.",
+  alternates: {
+    canonical: "/prompts",
+  },
+  openGraph: {
+    title: "Prompts",
+    description: "Explore published prompts with fast search and category filtering.",
+    url: "/prompts",
+  },
 };
 
 function buildPageHref(currentParams: URLSearchParams, page: number) {

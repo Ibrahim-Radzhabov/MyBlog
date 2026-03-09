@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { signOutAction } from "@/actions/auth";
+import { AdminNav } from "@/components/admin/admin-nav";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/constants";
 
@@ -35,18 +34,8 @@ export function AdminShell({ children }: AdminShellProps) {
       </header>
 
       <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[220px_1fr] lg:px-8">
-        <aside className="rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-3">
-          <nav className="flex flex-col gap-1">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-md px-3 py-2 text-sm font-medium text-[color:var(--muted-foreground)] transition hover:bg-[color:var(--surface)] hover:text-[color:var(--foreground)]"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+        <aside className="h-fit rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-3 lg:sticky lg:top-24">
+          <AdminNav links={links} />
         </aside>
 
         <main className="space-y-6">{children}</main>

@@ -11,6 +11,14 @@ import { getFeaturedPrompts } from "@/lib/db/prompts";
 export const metadata: Metadata = {
   title: "Prompt Catalog",
   description: "Browse premium-ready prompts for writing, marketing, product workflows, and automation.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Prompt Catalog",
+    description: "Browse premium-ready prompts for writing, marketing, product workflows, and automation.",
+    url: "/",
+  },
 };
 
 const howItWorks = [

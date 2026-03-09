@@ -30,11 +30,20 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: data.prompt.seo_title ?? data.prompt.title,
     description: data.prompt.seo_description ?? data.prompt.short_description,
+    alternates: {
+      canonical: `/prompts/${slug}`,
+    },
     openGraph: {
       title: data.prompt.seo_title ?? data.prompt.title,
       description: data.prompt.seo_description ?? data.prompt.short_description,
       type: "article",
       url: `/prompts/${slug}`,
+      images: data.prompt.cover_image_url ? [data.prompt.cover_image_url] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.prompt.seo_title ?? data.prompt.title,
+      description: data.prompt.seo_description ?? data.prompt.short_description,
       images: data.prompt.cover_image_url ? [data.prompt.cover_image_url] : undefined,
     },
   };

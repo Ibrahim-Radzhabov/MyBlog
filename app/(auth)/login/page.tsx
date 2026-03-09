@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/public/login-form";
@@ -15,6 +16,14 @@ const errorMessages: Record<string, string> = {
   auth_required: "Sign in required to access admin.",
   not_admin_email: "This account is not allowed by ADMIN_EMAIL.",
   forbidden: "Profile role is not admin.",
+};
+
+export const metadata: Metadata = {
+  title: "Admin login",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default async function LoginPage({ searchParams }: { searchParams: SearchParams }) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { VariantProps } from "class-variance-authority";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -35,6 +35,7 @@ export function ConfirmActionModal({
   testId,
 }: ConfirmActionModalProps) {
   const [open, setOpen] = useState(false);
+  const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const entries = useMemo(() => Object.entries(fields), [fields]);
 
@@ -43,6 +44,10 @@ export function ConfirmActionModal({
       return;
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    confirmButtonRef.current?.focus();
+
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
@@ -50,7 +55,10 @@ export function ConfirmActionModal({
     };
 
     document.addEventListener("keydown", onEscape);
-    return () => document.removeEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onEscape);
+    };
   }, [open]);
 
   return (
@@ -93,7 +101,12 @@ export function ConfirmActionModal({
                 {entries.map(([key, value]) => (
                   <input key={key} type="hidden" name={key} value={value} />
                 ))}
-                <Button type="submit" variant={confirmVariant} data-testid={testId ? `${testId}-confirm` : undefined}>
+                <Button
+                  ref={confirmButtonRef}
+                  type="submit"
+                  variant={confirmVariant}
+                  data-testid={testId ? `${testId}-confirm` : undefined}
+                >
                   {confirmLabel}
                 </Button>
               </form>

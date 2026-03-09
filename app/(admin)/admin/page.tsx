@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getRecentPrompts } from "@/lib/db/prompts";
 import { getAdminStats, getRecentAdminEvents } from "@/lib/db/stats";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const [stats, recentPrompts, recentAdminEvents] = await Promise.all([
@@ -133,7 +133,7 @@ export default async function AdminDashboardPage() {
                       </p>
                     </div>
                     <p className="text-xs text-[color:var(--muted-foreground)]">
-                      {formatDate(event.created_at)}
+                      {formatDateTime(event.created_at)}
                     </p>
                   </li>
                 ))}
