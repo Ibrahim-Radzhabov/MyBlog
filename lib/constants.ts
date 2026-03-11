@@ -1,8 +1,20 @@
+function normalizeSiteUrl(value: string | undefined) {
+  const fallback = "http://localhost:3000";
+  const raw = (value ?? fallback).trim();
+
+  try {
+    const parsed = new URL(raw);
+    return parsed.origin;
+  } catch {
+    return fallback;
+  }
+}
+
 export const siteConfig = {
   name: "Prompt Atlas",
   description: "A curated prompt catalog with clean public browsing and secure admin publishing.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  adminEmail: process.env.ADMIN_EMAIL ?? "admin@example.com",
+  url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
+  adminEmail: (process.env.ADMIN_EMAIL ?? "admin@example.com").trim(),
 } as const;
 
 export const promptStatus = {
