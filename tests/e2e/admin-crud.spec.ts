@@ -47,16 +47,16 @@ test.describe("admin CRUD with confirmations", () => {
     await expect(page.locator(`input[name="slug"][value="${tagSlug}"]`)).toBeVisible();
 
     await page.goto("/admin/prompts/new");
-    await page.getByLabel("Title").fill(promptTitle);
-    await page.getByLabel("Slug").fill(promptSlug);
-    await page.getByLabel("Short description").fill(
+    await page.locator("#title").fill(promptTitle);
+    await page.locator("#slug").fill(promptSlug);
+    await page.locator("#shortDescription").fill(
       "This prompt is created by Playwright to validate create and publish flow end-to-end."
     );
     await page
-      .getByLabel("Prompt content (markdown-friendly)")
+      .locator("#fullPromptText")
       .fill("You are a helpful assistant. Return a concise response for {{topic}} in bullet points.");
-    await page.getByLabel("Output example").fill("- Point one\n- Point two");
-    await page.getByLabel("Category").selectOption({ label: categoryName });
+    await page.locator("#outputExample").fill("- Point one\n- Point two");
+    await page.locator("#categoryId").selectOption({ label: categoryName });
     await page.getByRole("button", { name: `#${tagName}` }).click();
 
     await page.getByRole("button", { name: "Save as draft" }).click();
@@ -73,7 +73,7 @@ test.describe("admin CRUD with confirmations", () => {
     await expect(page).toHaveURL(new RegExp(`/admin/prompts/.+/edit`));
 
     await page
-      .getByLabel("Short description")
+      .locator("#shortDescription")
       .fill("Updated from e2e flow to verify edit action, publish state, and audit trail logging.");
     await page.getByRole("button", { name: "Update & publish" }).click();
     await expect(page).toHaveURL(/\/admin\/prompts/);
