@@ -18,14 +18,14 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       <section className="space-y-1">
-        <h2 className="text-3xl font-semibold">Dashboard</h2>
-        <p className="text-sm text-[color:var(--muted-foreground)]">Track publishing health and jump straight into prompt operations.</p>
+        <h2 className="text-3xl font-semibold">Дашборд</h2>
+        <p className="text-sm text-[color:var(--muted-foreground)]">Следите за состоянием публикаций и переходите к управлению промптами.</p>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Total prompts</CardTitle>
+            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Всего промптов</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold">{stats.totalPrompts}</p>
@@ -34,7 +34,7 @@ export default async function AdminDashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Published</CardTitle>
+            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Опубликовано</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold">{stats.publishedPrompts}</p>
@@ -43,7 +43,7 @@ export default async function AdminDashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Drafts</CardTitle>
+            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Черновики</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold">{stats.draftPrompts}</p>
@@ -52,7 +52,7 @@ export default async function AdminDashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Views (7 days)</CardTitle>
+            <CardTitle className="text-sm text-[color:var(--muted-foreground)]">Просмотры (7 дней)</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-semibold">{stats.recentViews}</p>
@@ -62,28 +62,28 @@ export default async function AdminDashboardPage() {
 
       <section className="flex flex-wrap gap-3">
         <Button asChild>
-          <Link href="/admin/prompts/new">Create prompt</Link>
+          <Link href="/admin/prompts/new">Создать промпт</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/admin/prompts">Manage prompts</Link>
+          <Link href="/admin/prompts">Управление промптами</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/admin/categories">Manage categories</Link>
+          <Link href="/admin/categories">Управление категориями</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/admin/tags">Manage tags</Link>
+          <Link href="/admin/tags">Управление тегами</Link>
         </Button>
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-xl font-semibold">Recent prompts</h3>
+        <h3 className="text-xl font-semibold">Недавние промпты</h3>
         {recentPrompts.length === 0 ? (
           <EmptyState
-            title="No prompts yet"
-            description="Create your first prompt to unlock catalog content and analytics."
+            title="Промптов пока нет"
+            description="Создайте первый промпт, чтобы наполнить каталог и начать собирать статистику."
             action={
               <Button asChild>
-                <Link href="/admin/prompts/new">Create first prompt</Link>
+                <Link href="/admin/prompts/new">Создать первый промпт</Link>
               </Button>
             }
           />
@@ -95,12 +95,12 @@ export default async function AdminDashboardPage() {
                   <li key={prompt.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                     <div>
                       <p className="font-medium">{prompt.title}</p>
-                      <p className="text-xs text-[color:var(--muted-foreground)]">/{prompt.slug} · Updated {formatDate(prompt.updated_at)}</p>
+                      <p className="text-xs text-[color:var(--muted-foreground)]">/{prompt.slug} · Обновлено {formatDate(prompt.updated_at)}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <StatusBadge status={prompt.status} />
                       <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/prompts/${prompt.id}/edit`}>Edit</Link>
+                        <Link href={`/admin/prompts/${prompt.id}/edit`}>Редактировать</Link>
                       </Button>
                     </div>
                   </li>
@@ -112,11 +112,11 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section className="space-y-3">
-        <h3 className="text-xl font-semibold">Audit trail</h3>
+        <h3 className="text-xl font-semibold">Журнал действий</h3>
         {recentAdminEvents.length === 0 ? (
           <EmptyState
-            title="No admin events yet"
-            description="Admin create/update/delete and upload actions will appear here."
+            title="Пока нет действий администратора"
+            description="Здесь появятся события создания, обновления, удаления и загрузки."
           />
         ) : (
           <Card>

@@ -5,15 +5,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
 const defaults: Record<string, string> = {
-  created: "Prompt created",
-  updated: "Prompt updated",
-  deleted: "Prompt deleted",
-  status_changed: "Status updated",
-  login_success: "Welcome back",
-  signed_out: "Signed out",
-  form_error: "Please fix the form errors",
-  delete_error: "Failed to delete prompt",
-  publish_error: "Failed to change prompt status",
+  created: "Промпт создан",
+  updated: "Промпт обновлен",
+  deleted: "Промпт удален",
+  status_changed: "Статус обновлен",
+  login_success: "С возвращением",
+  signed_out: "Вы вышли из аккаунта",
+  form_error: "Исправьте ошибки в форме",
+  delete_error: "Не удалось удалить промпт",
+  publish_error: "Не удалось изменить статус промпта",
 };
 
 export function ActionToast() {
@@ -37,7 +37,7 @@ export function ActionToast() {
     processed.current = signature;
 
     const rawMessage = searchParams.get("message");
-    const message = rawMessage ?? defaults[key] ?? "Done";
+    const message = rawMessage ?? defaults[key] ?? "Готово";
     const isError = key.includes("error") || key === "forbidden";
 
     if (isError) {

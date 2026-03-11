@@ -11,34 +11,34 @@ export default async function AdminTagsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-semibold">Manage tags</h2>
-        <p className="text-sm text-[color:var(--muted-foreground)]">Maintain reusable labels for prompt discovery and filters.</p>
+        <h2 className="text-3xl font-semibold">Управление тегами</h2>
+        <p className="text-sm text-[color:var(--muted-foreground)]">Добавляйте и редактируйте теги для поиска и фильтрации.</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">New tag</CardTitle>
+          <CardTitle className="text-base">Новый тег</CardTitle>
         </CardHeader>
         <CardContent>
           <form action={createTagAction} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]" data-testid="tag-create-form">
             <input
               name="name"
-              placeholder="Tag name"
+              placeholder="Название тега"
               required
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
             <input
               name="slug"
-              placeholder="tag-slug (optional)"
+              placeholder="slug-tega (необязательно)"
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Создать</Button>
           </form>
         </CardContent>
       </Card>
 
       {tags.length === 0 ? (
-        <EmptyState title="No tags yet" description="Create tags to improve catalog filtering and discoverability." />
+        <EmptyState title="Тегов пока нет" description="Создайте теги для лучшей фильтрации и навигации по каталогу." />
       ) : (
         <div className="space-y-3">
           {tags.map((tag) => (
@@ -59,17 +59,17 @@ export default async function AdminTagsPage() {
                     className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
                   />
                   <Button type="submit" variant="secondary">
-                    Update
+                    Обновить
                   </Button>
                 </form>
 
                 <ConfirmActionModal
                   action={deleteTagAction}
                   fields={{ tagId: tag.id }}
-                  title="Delete tag?"
-                  description={`This will remove “#${tag.name}” from all prompts.`}
-                  triggerLabel="Delete"
-                  confirmLabel="Delete tag"
+                  title="Удалить тег?"
+                  description={`Тег «#${tag.name}» будет удален у всех промптов.`}
+                  triggerLabel="Удалить"
+                  confirmLabel="Удалить тег"
                   testId={`delete-tag-${tag.slug}`}
                 />
               </CardContent>

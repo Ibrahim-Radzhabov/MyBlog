@@ -40,17 +40,17 @@ export default async function EditPromptPage({ params }: { params: Params }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-semibold">Edit prompt</h2>
-          <p className="text-sm text-[color:var(--muted-foreground)]">Update fields, publish state, tags, and SEO metadata.</p>
+          <h2 className="text-3xl font-semibold">Редактировать промпт</h2>
+          <p className="text-sm text-[color:var(--muted-foreground)]">Обновите поля, статус публикации, теги и SEO-метаданные.</p>
         </div>
 
         <ConfirmActionModal
           action={deletePromptAction}
           fields={{ promptId: prompt.id }}
-          title="Delete prompt?"
-          description={`This will permanently remove “${prompt.title}”.`}
-          triggerLabel="Delete prompt"
-          confirmLabel="Delete prompt"
+          title="Удалить промпт?"
+          description={`Промпт «${prompt.title}» будет удален без возможности восстановления.`}
+          triggerLabel="Удалить промпт"
+          confirmLabel="Удалить промпт"
           triggerSize="default"
           testId={`delete-edit-prompt-${prompt.slug}`}
         />

@@ -129,7 +129,7 @@ export async function createPromptAction(formData: FormData) {
   const parsed = promptFormSchema.safeParse(payload);
 
   if (!parsed.success) {
-    failRedirect("/admin/prompts/new", parsed.error.issues[0]?.message ?? "Invalid prompt data");
+    failRedirect("/admin/prompts/new", parsed.error.issues[0]?.message ?? "Некорректные данные промпта");
   }
 
   const normalized = normalizePromptData(parsed.data);
@@ -146,7 +146,7 @@ export async function createPromptAction(formData: FormData) {
   if (error || !prompt) {
     failRedirect(
       "/admin/prompts/new",
-      error?.message.includes("duplicate") ? "Slug already exists" : error?.message ?? "Failed to create prompt"
+      error?.message.includes("duplicate") ? "Такой slug уже существует" : error?.message ?? "Не удалось создать промпт"
     );
   }
 
@@ -166,7 +166,7 @@ export async function createPromptAction(formData: FormData) {
   });
 
   revalidatePromptPaths(prompt.slug);
-  redirect(`/admin/prompts?toast=created&message=${encodeURIComponent("Prompt created")}`);
+  redirect(`/admin/prompts?toast=created&message=${encodeURIComponent("Промпт создан")}`);
 }
 
 export async function updatePromptAction(formData: FormData) {
@@ -174,7 +174,7 @@ export async function updatePromptAction(formData: FormData) {
   const promptId = formData.get("promptId")?.toString();
 
   if (!promptId) {
-    failRedirect("/admin/prompts", "Missing prompt id");
+    failRedirect("/admin/prompts", "Не указан id промпта");
   }
 
   const payload = toPromptPayload(formData);
@@ -183,7 +183,7 @@ export async function updatePromptAction(formData: FormData) {
   if (!parsed.success) {
     failRedirect(
       `/admin/prompts/${promptId}/edit`,
-      parsed.error.issues[0]?.message ?? "Invalid prompt data"
+      parsed.error.issues[0]?.message ?? "Некорректные данные промпта"
     );
   }
 
@@ -215,7 +215,7 @@ export async function updatePromptAction(formData: FormData) {
   if (error || !updated) {
     failRedirect(
       `/admin/prompts/${promptId}/edit`,
-      error?.message.includes("duplicate") ? "Slug already exists" : error?.message ?? "Failed to update prompt"
+      error?.message.includes("duplicate") ? "Такой slug уже существует" : error?.message ?? "Не удалось обновить промпт"
     );
   }
 
@@ -235,7 +235,7 @@ export async function updatePromptAction(formData: FormData) {
   });
 
   revalidatePromptPaths(updated.slug);
-  redirect(`/admin/prompts?toast=updated&message=${encodeURIComponent("Prompt updated")}`);
+  redirect(`/admin/prompts?toast=updated&message=${encodeURIComponent("Промпт обновлен")}`);
 }
 
 export async function deletePromptAction(formData: FormData) {
@@ -243,7 +243,7 @@ export async function deletePromptAction(formData: FormData) {
   const promptId = formData.get("promptId")?.toString();
 
   if (!promptId) {
-    redirect("/admin/prompts?toast=delete_error&message=Missing%20prompt%20id");
+    redirect(`/admin/prompts?toast=delete_error&message=${encodeURIComponent("Не указан id промпта")}`);
   }
 
   const { data: existing } = await admin.supabase
@@ -271,7 +271,7 @@ export async function deletePromptAction(formData: FormData) {
   });
 
   revalidatePromptPaths(existing?.slug);
-  redirect("/admin/prompts?toast=deleted&message=Prompt%20deleted");
+  redirect(`/admin/prompts?toast=deleted&message=${encodeURIComponent("Промпт удален")}`);
 }
 
 export async function togglePromptStatusAction(formData: FormData) {
@@ -279,7 +279,7 @@ export async function togglePromptStatusAction(formData: FormData) {
   const promptId = formData.get("promptId")?.toString();
 
   if (!promptId) {
-    redirect("/admin/prompts?toast=publish_error&message=Missing%20prompt%20id");
+    redirect(`/admin/prompts?toast=publish_error&message=${encodeURIComponent("Не указан id промпта")}`);
   }
 
   const { data: existing, error: readError } = await admin.supabase
@@ -290,7 +290,7 @@ export async function togglePromptStatusAction(formData: FormData) {
 
   if (readError || !existing) {
     redirect(
-      `/admin/prompts?toast=publish_error&message=${encodeURIComponent(readError?.message ?? "Prompt not found")}`
+      `/admin/prompts?toast=publish_error&message=${encodeURIComponent(readError?.message ?? "Промпт не найден")}`
     );
   }
 
@@ -322,7 +322,7 @@ export async function togglePromptStatusAction(formData: FormData) {
   revalidatePromptPaths(existing.slug);
   redirect(
     `/admin/prompts?toast=status_changed&message=${encodeURIComponent(
-      nextStatus === "published" ? "Prompt published" : "Prompt moved to draft"
+      nextStatus === "published" ? "Промпт опубликован" : "Промпт переведен в черновик"
     )}`
   );
 }

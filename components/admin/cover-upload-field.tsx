@@ -20,7 +20,7 @@ export function CoverUploadField({ value, onChange }: CoverUploadFieldProps) {
     const file = fileInputRef.current?.files?.[0];
 
     if (!file) {
-      setError("Choose a file first");
+      setError("Сначала выберите файл");
       return;
     }
 
@@ -38,14 +38,14 @@ export function CoverUploadField({ value, onChange }: CoverUploadFieldProps) {
 
       if (!response.ok) {
         const errorData = (await response.json()) as { error?: string };
-        throw new Error(errorData.error ?? "Upload failed");
+        throw new Error(errorData.error ?? "Не удалось загрузить файл");
       }
 
       const payload = (await response.json()) as { url: string };
       onChange(payload.url);
       fileInputRef.current!.value = "";
     } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
+      setError(uploadError instanceof Error ? uploadError.message : "Не удалось загрузить файл");
     } finally {
       setUploading(false);
     }
@@ -54,18 +54,18 @@ export function CoverUploadField({ value, onChange }: CoverUploadFieldProps) {
   return (
     <div className="space-y-3 rounded-lg border border-[color:var(--border)] p-3">
       <div className="space-y-2">
-        <Label htmlFor="cover-upload">Upload cover image</Label>
+        <Label htmlFor="cover-upload">Загрузить обложку</Label>
         <Input id="cover-upload" ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <Button type="button" variant="secondary" onClick={upload} disabled={uploading}>
-          {uploading ? "Uploading..." : "Upload image"}
+          {uploading ? "Загрузка..." : "Загрузить изображение"}
         </Button>
 
         {value ? (
           <Button type="button" variant="ghost" onClick={() => onChange("")}>
-            Remove image
+            Удалить изображение
           </Button>
         ) : null}
       </div>
@@ -75,7 +75,7 @@ export function CoverUploadField({ value, onChange }: CoverUploadFieldProps) {
       {value ? (
         <div className="overflow-hidden rounded-md border border-[color:var(--border)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="Prompt cover preview" className="h-44 w-full object-cover" loading="lazy" />
+          <img src={value} alt="Предпросмотр обложки промпта" className="h-44 w-full object-cover" loading="lazy" />
         </div>
       ) : null}
     </div>

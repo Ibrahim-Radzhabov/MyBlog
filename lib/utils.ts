@@ -38,7 +38,7 @@ export function formatDate(value: string | null | undefined) {
     return "-";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     day: "2-digit",
     year: "numeric",
@@ -56,7 +56,7 @@ export function formatDateTime(value: string | null | undefined) {
     return "-";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("ru-RU", {
     month: "short",
     day: "2-digit",
     year: "numeric",

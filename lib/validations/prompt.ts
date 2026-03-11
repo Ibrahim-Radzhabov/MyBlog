@@ -4,8 +4,8 @@ const variableTypeSchema = z.enum(["text", "number", "select", "boolean"]);
 
 export const promptVariableSchema = z
   .object({
-    name: z.string().trim().min(1, "Variable name is required"),
-    label: z.string().trim().min(1, "Variable label is required"),
+    name: z.string().trim().min(1, "Имя переменной обязательно"),
+    label: z.string().trim().min(1, "Подпись переменной обязательна"),
     type: variableTypeSchema,
     required: z.boolean().default(false),
     placeholder: z.string().trim().optional(),
@@ -15,36 +15,36 @@ export const promptVariableSchema = z
     if (value.type === "select" && (!value.options || value.options.length === 0)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Select variables require at least one option",
+        message: "Для типа «список» укажите хотя бы один вариант",
         path: ["options"],
       });
     }
   });
 
 export const promptFormSchema = z.object({
-  title: z.string().trim().min(3, "Title must be at least 3 characters"),
+  title: z.string().trim().min(3, "Название должно содержать минимум 3 символа"),
   slug: z
     .string()
     .trim()
-    .min(3, "Slug must be at least 3 characters")
-    .regex(/^[a-z0-9-]+$/, "Slug can contain only lowercase letters, numbers, and hyphens"),
+    .min(3, "Slug должен содержать минимум 3 символа")
+    .regex(/^[a-z0-9-]+$/, "Slug может содержать только строчные латинские буквы, цифры и дефис"),
   shortDescription: z
     .string()
     .trim()
-    .min(10, "Short description must be at least 10 characters")
-    .max(260, "Short description is too long"),
-  fullPromptText: z.string().trim().min(20, "Prompt text must be at least 20 characters"),
+    .min(10, "Краткое описание должно содержать минимум 10 символов")
+    .max(260, "Краткое описание слишком длинное"),
+  fullPromptText: z.string().trim().min(20, "Текст промпта должен содержать минимум 20 символов"),
   outputExample: z.string().trim().optional(),
   categoryId: z.string().uuid().optional().or(z.literal("")),
   tagIds: z.array(z.string().uuid()).default([]),
   variables: z.array(promptVariableSchema).default([]),
   status: z.enum(["draft", "published"]),
-  coverImageUrl: z.string().trim().url("Cover image URL must be valid").optional().or(z.literal("")),
-  seoTitle: z.string().trim().max(70, "SEO title should be 70 chars or less").optional(),
+  coverImageUrl: z.string().trim().url("URL обложки должен быть корректным").optional().or(z.literal("")),
+  seoTitle: z.string().trim().max(70, "SEO-заголовок должен быть не длиннее 70 символов").optional(),
   seoDescription: z
     .string()
     .trim()
-    .max(160, "SEO description should be 160 chars or less")
+    .max(160, "SEO-описание должно быть не длиннее 160 символов")
     .optional(),
 });
 

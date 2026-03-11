@@ -9,30 +9,30 @@ import { getAllCategories } from "@/lib/db/categories";
 import { getFeaturedPrompts } from "@/lib/db/prompts";
 
 export const metadata: Metadata = {
-  title: "Prompt Catalog",
-  description: "Browse premium-ready prompts for writing, marketing, product workflows, and automation.",
+  title: "Каталог промптов",
+  description: "Готовые промпты для маркетинга, текста, продуктовой работы и автоматизации.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Prompt Catalog",
-    description: "Browse premium-ready prompts for writing, marketing, product workflows, and automation.",
+    title: "Каталог промптов",
+    description: "Готовые промпты для маркетинга, текста, продуктовой работы и автоматизации.",
     url: "/",
   },
 };
 
 const howItWorks = [
   {
-    title: "Browse curated prompts",
-    description: "Discover production-ready prompts grouped by category and tags.",
+    title: "Выберите промпт",
+    description: "Откройте каталог и найдите нужный шаблон по категориям и тегам.",
   },
   {
-    title: "Pick your template",
-    description: "Open prompt details, inspect variables, and copy the final prompt text instantly.",
+    title: "Настройте под задачу",
+    description: "Проверьте переменные, пример результата и скопируйте текст в один клик.",
   },
   {
-    title: "Apply to your workflow",
-    description: "Reuse prompt structures in your products, client work, or internal ops.",
+    title: "Используйте в работе",
+    description: "Применяйте структуру промптов в клиентских проектах и внутренних процессах.",
   },
 ];
 
@@ -44,33 +44,33 @@ export default async function HomePage() {
       <section className="grid items-center gap-8 rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)] p-8 md:grid-cols-[1.2fr_0.8fr] md:p-10">
         <div className="space-y-6">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--muted-foreground)]">
-            Prompt Catalog MVP
+            MVP-каталог промптов
           </p>
           <h1 className="text-4xl font-semibold leading-tight md:text-5xl">
-            Publish, manage, and ship prompt experiences with clean admin control.
+            Публикуйте и управляйте промптами в удобной и безопасной админ-панели.
           </h1>
           <p className="max-w-xl text-base text-[color:var(--muted-foreground)]">
-            Public visitors can explore published prompts instantly, while admin-only tools keep editorial workflow secure.
+            Гости видят только опубликованные материалы, а управление и редактирование доступны только администратору.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild size="lg">
-              <Link href="/prompts">Browse all prompts</Link>
+              <Link href="/prompts">Открыть каталог</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="/login">Admin login</Link>
+              <Link href="/login">Вход в админку</Link>
             </Button>
           </div>
         </div>
 
         <Card className="border-[color:var(--border)] bg-[color:var(--surface)]">
           <CardHeader>
-            <CardTitle>Launch-ready content operations</CardTitle>
-            <CardDescription>Security-first architecture with App Router + Supabase RLS.</CardDescription>
+            <CardTitle>Готово к запуску</CardTitle>
+            <CardDescription>Безопасная архитектура на App Router и Supabase RLS.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-[color:var(--muted-foreground)]">
-            <p>Server-protected admin area.</p>
-            <p>Public storefront with search and filters.</p>
-            <p>SEO-ready detail pages and sitemap support.</p>
+            <p>Админка защищена на сервере.</p>
+            <p>Публичный каталог с поиском и фильтрами.</p>
+            <p>SEO-метаданные, sitemap и robots готовы.</p>
           </CardContent>
         </Card>
       </section>
@@ -78,18 +78,18 @@ export default async function HomePage() {
       <section className="space-y-5">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold">Featured prompts</h2>
-            <p className="text-sm text-[color:var(--muted-foreground)]">Freshly curated examples from the published catalog.</p>
+            <h2 className="text-2xl font-semibold">Рекомендуемые промпты</h2>
+            <p className="text-sm text-[color:var(--muted-foreground)]">Подборка опубликованных примеров из каталога.</p>
           </div>
           <Button asChild variant="ghost">
-            <Link href="/prompts">View all</Link>
+            <Link href="/prompts">Смотреть все</Link>
           </Button>
         </div>
 
         {featuredPrompts.length === 0 ? (
           <EmptyState
-            title="No published prompts yet"
-            description="Publish at least one prompt from the admin area to populate the storefront."
+            title="Пока нет опубликованных промптов"
+            description="Опубликуйте хотя бы один промпт в админке, чтобы заполнить каталог."
           />
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -101,16 +101,16 @@ export default async function HomePage() {
       </section>
 
       <section className="space-y-5">
-        <h2 className="text-2xl font-semibold">Category highlights</h2>
+        <h2 className="text-2xl font-semibold">Категории</h2>
         {categories.length === 0 ? (
-          <EmptyState title="No categories yet" description="Categories will appear here once seeded or created by admin." />
+          <EmptyState title="Категорий пока нет" description="Категории появятся после заполнения данных или создания в админке." />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.slice(0, 8).map((category) => (
               <Card key={category.id}>
                 <CardHeader>
                   <CardTitle className="text-base">{category.name}</CardTitle>
-                  <CardDescription>{category.description || "Category ready for prompt grouping."}</CardDescription>
+                  <CardDescription>{category.description || "Категория готова для группировки промптов."}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -119,7 +119,7 @@ export default async function HomePage() {
       </section>
 
       <section className="space-y-5">
-        <h2 className="text-2xl font-semibold">How it works</h2>
+        <h2 className="text-2xl font-semibold">Как это работает</h2>
         <div className="grid gap-4 md:grid-cols-3">
           {howItWorks.map((item) => (
             <Card key={item.title}>

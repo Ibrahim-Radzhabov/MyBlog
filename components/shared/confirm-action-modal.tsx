@@ -94,7 +94,7 @@ export function ConfirmActionModal({
 
             <div className="flex items-center justify-end gap-2">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
+                Отмена
               </Button>
 
               <form action={action}>

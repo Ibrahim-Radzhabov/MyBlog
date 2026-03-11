@@ -55,7 +55,7 @@ export function PromptCard({ prompt, showStatus = false }: PromptCardProps) {
           href={`/prompts/${prompt.slug}`}
           className="text-sm font-medium text-[color:var(--foreground)] underline-offset-4 hover:underline"
         >
-          Open
+          Открыть
         </Link>
       </CardFooter>
     </Card>

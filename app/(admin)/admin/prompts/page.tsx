@@ -66,11 +66,11 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-semibold">Manage prompts</h2>
-          <p className="text-sm text-[color:var(--muted-foreground)]">Search, publish, unpublish, and edit prompt records.</p>
+          <h2 className="text-3xl font-semibold">Управление промптами</h2>
+          <p className="text-sm text-[color:var(--muted-foreground)]">Ищите, публикуйте, снимайте с публикации и редактируйте промпты.</p>
         </div>
         <Button asChild>
-          <Link href="/admin/prompts/new">New prompt</Link>
+          <Link href="/admin/prompts/new">Новый промпт</Link>
         </Button>
       </div>
 
@@ -79,7 +79,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           type="search"
           name="q"
           defaultValue={q}
-          placeholder="Search title or slug"
+          placeholder="Поиск по названию или slug"
           className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
         />
 
@@ -88,9 +88,9 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           defaultValue={status ?? ""}
           className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
         >
-          <option value="">All statuses</option>
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
+          <option value="">Все статусы</option>
+          <option value="draft">Черновик</option>
+          <option value="published">Опубликовано</option>
         </select>
 
         <select
@@ -98,7 +98,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           defaultValue={category}
           className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
         >
-          <option value="">All categories</option>
+          <option value="">Все категории</option>
           {categories.map((item) => (
             <option key={item.id} value={item.slug}>
               {item.name}
@@ -106,16 +106,16 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           ))}
         </select>
 
-        <Button type="submit">Apply</Button>
+        <Button type="submit">Применить</Button>
       </form>
 
       {catalog.items.length === 0 ? (
         <EmptyState
-          title="No prompts found"
-          description="Create a new prompt or adjust filters to see existing entries."
+          title="Промпты не найдены"
+          description="Создайте новый промпт или измените фильтры, чтобы увидеть существующие записи."
           action={
             <Button asChild>
-              <Link href="/admin/prompts/new">Create prompt</Link>
+              <Link href="/admin/prompts/new">Создать промпт</Link>
             </Button>
           }
         />
@@ -124,12 +124,12 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
+                <TableHead>Название</TableHead>
                 <TableHead>Slug</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Updated</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Категория</TableHead>
+                <TableHead>Статус</TableHead>
+                <TableHead>Обновлено</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -145,23 +145,23 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
                   <TableCell>
                     <div className="flex flex-wrap items-center justify-end gap-2">
                       <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin/prompts/${prompt.id}/edit`}>Edit</Link>
+                        <Link href={`/admin/prompts/${prompt.id}/edit`}>Редактировать</Link>
                       </Button>
 
                       <form action={togglePromptStatusAction}>
                         <input type="hidden" name="promptId" value={prompt.id} />
                         <Button type="submit" size="sm" variant="secondary">
-                          {prompt.status === "published" ? "Unpublish" : "Publish"}
+                          {prompt.status === "published" ? "Снять с публикации" : "Опубликовать"}
                         </Button>
                       </form>
 
                       <ConfirmActionModal
                         action={deletePromptAction}
                         fields={{ promptId: prompt.id }}
-                        title="Delete prompt?"
-                        description={`This will permanently remove “${prompt.title}”.`}
-                        triggerLabel="Delete"
-                        confirmLabel="Delete prompt"
+                        title="Удалить промпт?"
+                        description={`Промпт «${prompt.title}» будет удален без возможности восстановления.`}
+                        triggerLabel="Удалить"
+                        confirmLabel="Удалить промпт"
                         testId={`delete-prompt-${prompt.slug}`}
                       />
                     </div>
@@ -173,19 +173,19 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
 
           <div className="flex items-center justify-between border-t border-[color:var(--border)] px-4 py-3">
             <p className="text-sm text-[color:var(--muted-foreground)]">
-              Page {catalog.page} of {Math.max(catalog.pageCount, 1)}
+              Страница {catalog.page} из {Math.max(catalog.pageCount, 1)}
             </p>
 
             <div className="flex items-center gap-2">
               {catalog.page > 1 ? (
                 <Button asChild variant="outline" size="sm">
-                  <Link href={buildPageHref(activeParams, catalog.page - 1)}>Previous</Link>
+                  <Link href={buildPageHref(activeParams, catalog.page - 1)}>Назад</Link>
                 </Button>
               ) : null}
 
               {catalog.page < catalog.pageCount ? (
                 <Button asChild size="sm">
-                  <Link href={buildPageHref(activeParams, catalog.page + 1)}>Next</Link>
+                  <Link href={buildPageHref(activeParams, catalog.page + 1)}>Вперед</Link>
                 </Button>
               ) : null}
             </div>

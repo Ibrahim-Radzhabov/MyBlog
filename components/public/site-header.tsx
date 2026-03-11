@@ -21,10 +21,10 @@ export function SiteHeader() {
           {siteConfig.name}
         </Link>
 
-        <nav className="flex items-center gap-2" aria-label="Primary">
+        <nav className="flex items-center gap-2" aria-label="Основная навигация">
           <Button variant={isCatalog ? "default" : "ghost"} asChild>
             <Link href="/prompts" aria-current={isCatalog ? "page" : undefined}>
-              Catalog
+              Каталог
             </Link>
           </Button>
           <Button variant="outline" asChild>
@@ -33,7 +33,7 @@ export function SiteHeader() {
               className={cn(pathname === "/login" ? "font-semibold" : undefined)}
               aria-current={pathname === "/login" ? "page" : undefined}
             >
-              Admin Login
+              Вход в админку
             </Link>
           </Button>
         </nav>

@@ -7,8 +7,8 @@ import { siteConfig } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/server";
 
 const loginSchema = z.object({
-  email: z.string().trim().email("Enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: z.string().trim().email("Введите корректный email"),
+  password: z.string().min(8, "Пароль должен содержать минимум 8 символов"),
 });
 
 export type AuthActionState = {
@@ -23,7 +23,7 @@ export async function signInAction(_: AuthActionState, formData: FormData): Prom
 
   if (!parsed.success) {
     return {
-      error: parsed.error.issues[0]?.message ?? "Invalid credentials",
+      error: parsed.error.issues[0]?.message ?? "Неверные учетные данные",
     };
   }
 
@@ -45,14 +45,14 @@ export async function signInAction(_: AuthActionState, formData: FormData): Prom
 
   if (!user) {
     return {
-      error: "Sign-in failed. Try again.",
+      error: "Не удалось выполнить вход. Попробуйте еще раз.",
     };
   }
 
   if ((user.email ?? "").toLowerCase() !== siteConfig.adminEmail.toLowerCase()) {
     await supabase.auth.signOut();
     return {
-      error: "This account cannot access admin.",
+      error: "Этот аккаунт не имеет доступа к админке.",
     };
   }
 
@@ -65,7 +65,7 @@ export async function signInAction(_: AuthActionState, formData: FormData): Prom
   if (!profile || profile.role !== "admin") {
     await supabase.auth.signOut();
     return {
-      error: "Profile is not authorized as admin.",
+      error: "Профиль не авторизован как администратор.",
     };
   }
 

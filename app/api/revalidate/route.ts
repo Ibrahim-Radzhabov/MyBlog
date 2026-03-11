@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const expectedSecret = process.env.REVALIDATE_SECRET;
 
   if (!expectedSecret || (secret !== expectedSecret && payload.secret !== expectedSecret)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Нет доступа" }, { status: 401 });
   }
 
   if (payload.tag) {

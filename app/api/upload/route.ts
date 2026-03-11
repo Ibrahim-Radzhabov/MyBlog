@@ -38,24 +38,24 @@ export async function POST(request: Request) {
   const admin = await requireAdminUser();
 
   if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Нет доступа" }, { status: 401 });
   }
 
   const formData = await request.formData();
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: "File is required" }, { status: 400 });
+    return NextResponse.json({ error: "Файл обязателен" }, { status: 400 });
   }
 
   const allowedTypes = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 
   if (!allowedTypes.has(file.type)) {
-    return NextResponse.json({ error: "Unsupported file type" }, { status: 400 });
+    return NextResponse.json({ error: "Неподдерживаемый тип файла" }, { status: 400 });
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    return NextResponse.json({ error: "Image must be under 5MB" }, { status: 400 });
+    return NextResponse.json({ error: "Изображение должно быть меньше 5 МБ" }, { status: 400 });
   }
 
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "-");
@@ -95,14 +95,14 @@ export async function DELETE(request: Request) {
   const admin = await requireAdminUser();
 
   if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Нет доступа" }, { status: 401 });
   }
 
   const payload = (await request.json().catch(() => ({}))) as { path?: string };
   const path = payload.path?.trim();
 
   if (!path) {
-    return NextResponse.json({ error: "Path is required" }, { status: 400 });
+    return NextResponse.json({ error: "Путь к файлу обязателен" }, { status: 400 });
   }
 
   const adminClient = createAdminClient();

@@ -20,7 +20,7 @@ export function LoginForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">Пароль</Label>
         <Input id="password" name="password" type="password" autoComplete="current-password" required />
       </div>
 
@@ -31,7 +31,7 @@ export function LoginForm() {
       ) : null}
 
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? "Выполняем вход..." : "Войти"}
       </Button>
     </form>
   );

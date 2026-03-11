@@ -9,8 +9,8 @@ export default async function NewPromptPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-3xl font-semibold">Create prompt</h2>
-        <p className="text-sm text-[color:var(--muted-foreground)]">Write content once, save as draft, then publish when ready.</p>
+        <h2 className="text-3xl font-semibold">Создать промпт</h2>
+        <p className="text-sm text-[color:var(--muted-foreground)]">Создайте контент, сохраните как черновик и опубликуйте, когда будете готовы.</p>
       </div>
 
       <PromptForm

@@ -6,8 +6,8 @@ type StatusBadgeProps = {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   if (status === "published") {
-    return <Badge variant="success">Published</Badge>;
+    return <Badge variant="success">Опубликовано</Badge>;
   }
 
-  return <Badge variant="warning">Draft</Badge>;
+  return <Badge variant="warning">Черновик</Badge>;
 }

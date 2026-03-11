@@ -68,7 +68,7 @@ function SubmitButtons({ mode, onStatusChange }: { mode: "create" | "edit"; onSt
         disabled={pending}
         onClick={() => onStatusChange("draft")}
       >
-        {pending ? "Saving..." : mode === "create" ? "Save as draft" : "Update draft"}
+        {pending ? "Сохранение..." : mode === "create" ? "Сохранить как черновик" : "Обновить черновик"}
       </Button>
 
       <Button
@@ -78,7 +78,7 @@ function SubmitButtons({ mode, onStatusChange }: { mode: "create" | "edit"; onSt
         disabled={pending}
         onClick={() => onStatusChange("published")}
       >
-        {pending ? "Publishing..." : mode === "create" ? "Publish prompt" : "Update & publish"}
+        {pending ? "Публикация..." : mode === "create" ? "Опубликовать промпт" : "Обновить и опубликовать"}
       </Button>
     </div>
   );
@@ -174,13 +174,13 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
 
       <section className="grid gap-4 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-5 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="title">Title</Label>
+          <Label htmlFor="title">Название</Label>
           <Input
             id="title"
             name="title"
             value={title}
             onChange={(event) => onTitleChange(event.target.value)}
-            placeholder="High-converting product description generator"
+            placeholder="Генератор описаний продукта с высокой конверсией"
             required
           />
         </div>
@@ -195,20 +195,20 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
               setSlugTouched(true);
               setSlug(slugify(event.target.value));
             }}
-            placeholder="product-description-generator"
+            placeholder="generator-opisaniy-produkta"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="categoryId">Category</Label>
+          <Label htmlFor="categoryId">Категория</Label>
           <select
             id="categoryId"
             name="categoryId"
             defaultValue={initialValues.categoryId}
             className="h-10 w-full rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
           >
-            <option value="">No category</option>
+            <option value="">Без категории</option>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -218,7 +218,7 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="shortDescription">Short description</Label>
+          <Label htmlFor="shortDescription">Краткое описание</Label>
           <Textarea
             id="shortDescription"
             name="shortDescription"
@@ -229,7 +229,7 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="fullPromptText">Prompt content (markdown-friendly)</Label>
+          <Label htmlFor="fullPromptText">Текст промпта (поддерживается markdown)</Label>
           <Textarea
             id="fullPromptText"
             name="fullPromptText"
@@ -240,14 +240,14 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="outputExample">Output example</Label>
+          <Label htmlFor="outputExample">Пример результата</Label>
           <Textarea id="outputExample" name="outputExample" defaultValue={initialValues.outputExample} rows={5} />
         </div>
       </section>
 
       <section className="grid gap-4 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-5 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
-          <Label>Tags</Label>
+          <Label>Теги</Label>
           <div className="flex flex-wrap gap-2">
             {tags.map((tag) => {
               const active = selectedTags.has(tag.id);
@@ -271,17 +271,17 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="seoTitle">SEO title</Label>
+          <Label htmlFor="seoTitle">SEO-заголовок</Label>
           <Input id="seoTitle" name="seoTitle" defaultValue={initialValues.seoTitle} />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="seoDescription">SEO description</Label>
+          <Label htmlFor="seoDescription">SEO-описание</Label>
           <Input id="seoDescription" name="seoDescription" defaultValue={initialValues.seoDescription} />
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="coverImageUrlManual">Cover image URL (manual)</Label>
+          <Label htmlFor="coverImageUrlManual">URL обложки (вручную)</Label>
           <Input
             id="coverImageUrlManual"
             value={coverImageUrl}
@@ -298,19 +298,19 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
       <section className="space-y-4 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-5">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-semibold">Variables</h3>
+            <h3 className="text-base font-semibold">Переменные</h3>
             <p className="text-sm text-[color:var(--muted-foreground)]">
-              Build variables used inside the prompt template.
+              Определите переменные, которые используются в шаблоне промпта.
             </p>
           </div>
           <Button type="button" variant="outline" onClick={() => setVariables((prev) => [...prev, emptyVariable])}>
-            Add variable
+            Добавить переменную
           </Button>
         </div>
 
         {variables.length === 0 ? (
           <p className="rounded-md border border-dashed border-[color:var(--border)] p-3 text-sm text-[color:var(--muted-foreground)]">
-            No variables yet. Add one if this prompt needs user-provided inputs.
+            Переменные пока не добавлены. Добавьте их, если промпт использует пользовательские данные.
           </p>
         ) : (
           <div className="space-y-3">
@@ -338,14 +338,14 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
                     updateVariable(index, "type", event.target.value as VariableInput["type"])
                   }
                 >
-                  <option value="text">Text</option>
-                  <option value="number">Number</option>
-                  <option value="boolean">Boolean</option>
-                  <option value="select">Select</option>
+                  <option value="text">Текст</option>
+                  <option value="number">Число</option>
+                  <option value="boolean">Булево</option>
+                  <option value="select">Список</option>
                 </select>
                 <Input
                   className="md:col-span-3"
-                  placeholder="placeholder"
+                  placeholder="плейсхолдер"
                   value={variable.placeholder}
                   onChange={(event) => updateVariable(index, "placeholder", event.target.value)}
                 />
@@ -356,7 +356,7 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
                     checked={variable.required}
                     onChange={(event) => updateVariable(index, "required", event.target.checked)}
                   />
-                  req
+                  обяз.
                 </label>
 
                 <Button
@@ -365,13 +365,13 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
                   className="md:col-span-1"
                   onClick={() => removeVariable(index)}
                 >
-                  Remove
+                  Удалить
                 </Button>
 
                 {variable.type === "select" ? (
                   <Input
                     className="md:col-span-12"
-                    placeholder="options separated by commas"
+                    placeholder="варианты через запятую"
                     value={variable.optionsText}
                     onChange={(event) => updateVariable(index, "optionsText", event.target.value)}
                   />

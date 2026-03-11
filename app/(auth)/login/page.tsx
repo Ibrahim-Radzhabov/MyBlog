@@ -13,13 +13,13 @@ type SearchParams = Promise<{
 }>;
 
 const errorMessages: Record<string, string> = {
-  auth_required: "Sign in required to access admin.",
-  not_admin_email: "This account is not allowed by ADMIN_EMAIL.",
-  forbidden: "Profile role is not admin.",
+  auth_required: "Для доступа к админке необходимо войти.",
+  not_admin_email: "Этот аккаунт не совпадает с ADMIN_EMAIL.",
+  forbidden: "Профиль не имеет роль admin.",
 };
 
 export const metadata: Metadata = {
-  title: "Admin login",
+  title: "Вход в админку",
   robots: {
     index: false,
     follow: false,
@@ -40,20 +40,20 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
     <div className="grid min-h-screen grid-cols-1 bg-[color:var(--background)] lg:grid-cols-2">
       <section className="hidden border-r border-[color:var(--border)] bg-[color:var(--surface)] p-10 lg:flex lg:flex-col lg:justify-between">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Public browsing open</p>
-          <h1 className="text-4xl font-semibold leading-tight">Anyone can browse prompts. Admin editing is restricted.</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--muted-foreground)]">Открытый доступ</p>
+          <h1 className="text-4xl font-semibold leading-tight">Каталог доступен всем, но редактирование разрешено только администратору.</h1>
         </div>
         <Button asChild variant="outline" className="w-fit">
-          <Link href="/prompts">Back to catalog</Link>
+          <Link href="/prompts">Назад в каталог</Link>
         </Button>
       </section>
 
       <section className="flex items-center justify-center px-4 py-10 sm:px-6">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Admin sign in</CardTitle>
+            <CardTitle>Вход администратора</CardTitle>
             <CardDescription>
-              Access is allowed only for <strong>{siteConfig.adminEmail}</strong> with role <strong>admin</strong>.
+              Доступ разрешен только для <strong>{siteConfig.adminEmail}</strong> с ролью <strong>admin</strong>.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -64,7 +64,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
             ) : null}
             <LoginForm />
             <p className="text-center text-xs text-[color:var(--muted-foreground)]">
-              Public sign-up must remain disabled in Supabase Auth settings.
+              Публичная регистрация должна быть отключена в настройках Supabase Auth.
             </p>
           </CardContent>
         </Card>

@@ -9,22 +9,22 @@ test.describe("public and auth flows", () => {
 
   test("home links to catalog", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Publish, manage, and ship");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Публикуйте и управляйте");
 
-    await page.getByRole("link", { name: "Browse all prompts" }).first().click();
+    await page.getByRole("link", { name: "Открыть каталог" }).first().click();
     await expect(page).toHaveURL(/\/prompts/);
-    await expect(page.getByRole("heading", { level: 1, name: "Prompt catalog" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Каталог промптов" })).toBeVisible();
   });
 
   test("login page renders restriction message", async ({ page }) => {
     await page.goto("/login");
-    await expect(page.getByRole("heading", { name: "Admin sign in" })).toBeVisible();
-    await expect(page.getByText("Public sign-up must remain disabled")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Вход администратора" })).toBeVisible();
+    await expect(page.getByText("Публичная регистрация должна быть отключена")).toBeVisible();
   });
 
   test("guest cannot access admin area", async ({ page }) => {
     await page.goto("/admin");
     await expect(page).toHaveURL(/\/login\?error=auth_required/);
-    await expect(page.getByRole("heading", { name: "Admin sign in" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Вход администратора" })).toBeVisible();
   });
 });

@@ -14,8 +14,8 @@ const canRunAdminCrud = Boolean(
 async function loginAsAdmin(page: import("@playwright/test").Page) {
   await page.goto("/login");
   await page.getByLabel("Email").fill(adminEmail!);
-  await page.getByLabel("Password").fill(adminPassword!);
-  await page.getByRole("button", { name: "Sign in" }).click();
+  await page.getByLabel("Пароль").fill(adminPassword!);
+  await page.getByRole("button", { name: "Войти" }).click();
   await expect(page).toHaveURL(/\/admin/);
 }
 
@@ -24,9 +24,9 @@ test.describe("admin CRUD with confirmations", () => {
 
   test("admin can create, publish, and delete prompt with taxonomy", async ({ page }) => {
     const suffix = `${Date.now()}`;
-    const categoryName = `E2E Category ${suffix}`;
+    const categoryName = `E2E Категория ${suffix}`;
     const categorySlug = `e2e-category-${suffix}`;
-    const tagName = `E2E Tag ${suffix}`;
+    const tagName = `E2E Тег ${suffix}`;
     const tagSlug = `e2e-tag-${suffix}`;
 
     const promptTitle = `E2E Prompt ${suffix}`;
@@ -35,15 +35,15 @@ test.describe("admin CRUD with confirmations", () => {
     await loginAsAdmin(page);
 
     await page.goto("/admin/categories");
-    await page.getByTestId("category-create-form").getByPlaceholder("Category name").fill(categoryName);
-    await page.getByTestId("category-create-form").getByPlaceholder("category-slug (optional)").fill(categorySlug);
-    await page.getByTestId("category-create-form").getByRole("button", { name: "Create" }).click();
+    await page.getByTestId("category-create-form").getByPlaceholder("Название категории").fill(categoryName);
+    await page.getByTestId("category-create-form").getByPlaceholder("slug-kategorii (необязательно)").fill(categorySlug);
+    await page.getByTestId("category-create-form").getByRole("button", { name: "Создать" }).click();
     await expect(page.locator(`input[name="slug"][value="${categorySlug}"]`)).toBeVisible();
 
     await page.goto("/admin/tags");
-    await page.getByTestId("tag-create-form").getByPlaceholder("Tag name").fill(tagName);
-    await page.getByTestId("tag-create-form").getByPlaceholder("tag-slug (optional)").fill(tagSlug);
-    await page.getByTestId("tag-create-form").getByRole("button", { name: "Create" }).click();
+    await page.getByTestId("tag-create-form").getByPlaceholder("Название тега").fill(tagName);
+    await page.getByTestId("tag-create-form").getByPlaceholder("slug-tega (необязательно)").fill(tagSlug);
+    await page.getByTestId("tag-create-form").getByRole("button", { name: "Создать" }).click();
     await expect(page.locator(`input[name="slug"][value="${tagSlug}"]`)).toBeVisible();
 
     await page.goto("/admin/prompts/new");
@@ -59,23 +59,23 @@ test.describe("admin CRUD with confirmations", () => {
     await page.locator("#categoryId").selectOption({ label: categoryName });
     await page.getByRole("button", { name: `#${tagName}` }).click();
 
-    await page.getByRole("button", { name: "Save as draft" }).click();
+    await page.getByRole("button", { name: "Сохранить как черновик" }).click();
     await expect(page).toHaveURL(/\/admin\/prompts/);
 
     const promptRow = page.getByRole("row", { name: new RegExp(promptTitle) });
     await expect(promptRow).toBeVisible();
-    await expect(promptRow.getByText("Draft")).toBeVisible();
+    await expect(promptRow.getByText("Черновик")).toBeVisible();
 
-    await promptRow.getByRole("button", { name: "Publish" }).click();
-    await expect(promptRow.getByRole("button", { name: "Unpublish" })).toBeVisible();
+    await promptRow.getByRole("button", { name: "Опубликовать" }).click();
+    await expect(promptRow.getByRole("button", { name: "Снять с публикации" })).toBeVisible();
 
-    await promptRow.getByRole("link", { name: "Edit" }).click();
+    await promptRow.getByRole("link", { name: "Редактировать" }).click();
     await expect(page).toHaveURL(new RegExp(`/admin/prompts/.+/edit`));
 
     await page
       .locator("#shortDescription")
       .fill("Updated from e2e flow to verify edit action, publish state, and audit trail logging.");
-    await page.getByRole("button", { name: "Update & publish" }).click();
+    await page.getByRole("button", { name: "Обновить и опубликовать" }).click();
     await expect(page).toHaveURL(/\/admin\/prompts/);
 
     await page.getByTestId(`delete-prompt-${promptSlug}-trigger`).click();
@@ -95,7 +95,7 @@ test.describe("admin CRUD with confirmations", () => {
     await expect(page.locator(`input[name="slug"][value="${tagSlug}"]`)).toHaveCount(0);
 
     await page.goto("/admin");
-    await expect(page.getByRole("heading", { name: "Audit trail" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Журнал действий" })).toBeVisible();
     await expect(page.getByText("prompt.create")).toBeVisible();
     await expect(page.getByText("prompt.delete")).toBeVisible();
   });

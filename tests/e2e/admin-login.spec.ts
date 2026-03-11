@@ -17,10 +17,10 @@ test.describe("admin login flow", () => {
   test("admin can sign in and reach dashboard", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Email").fill(adminEmail!);
-    await page.getByLabel("Password").fill(adminPassword!);
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByLabel("Пароль").fill(adminPassword!);
+    await page.getByRole("button", { name: "Войти" }).click();
 
     await expect(page).toHaveURL(/\/admin/);
-    await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Дашборд" })).toBeVisible();
   });
 });

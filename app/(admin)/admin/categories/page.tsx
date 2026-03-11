@@ -15,13 +15,13 @@ export default async function AdminCategoriesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-semibold">Manage categories</h2>
-        <p className="text-sm text-[color:var(--muted-foreground)]">Create and maintain grouping for the prompt catalog.</p>
+        <h2 className="text-3xl font-semibold">Управление категориями</h2>
+        <p className="text-sm text-[color:var(--muted-foreground)]">Создавайте и поддерживайте структуру разделов каталога.</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">New category</CardTitle>
+          <CardTitle className="text-base">Новая категория</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -31,27 +31,27 @@ export default async function AdminCategoriesPage() {
           >
             <input
               name="name"
-              placeholder="Category name"
+              placeholder="Название категории"
               required
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
             <input
               name="slug"
-              placeholder="category-slug (optional)"
+              placeholder="slug-kategorii (необязательно)"
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
             <input
               name="description"
-              placeholder="Short description"
+              placeholder="Краткое описание"
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
-            <Button type="submit">Create</Button>
+            <Button type="submit">Создать</Button>
           </form>
         </CardContent>
       </Card>
 
       {categories.length === 0 ? (
-        <EmptyState title="No categories yet" description="Add your first category to organize prompts." />
+        <EmptyState title="Категорий пока нет" description="Добавьте первую категорию для удобной структуры каталога." />
       ) : (
         <div className="space-y-3">
           {categories.map((category) => (
@@ -77,17 +77,17 @@ export default async function AdminCategoriesPage() {
                     className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
                   />
                   <Button type="submit" variant="secondary">
-                    Update
+                    Обновить
                   </Button>
                 </form>
 
                 <ConfirmActionModal
                   action={deleteCategoryAction}
                   fields={{ categoryId: category.id }}
-                  title="Delete category?"
-                  description={`This will remove “${category.name}” and detach it from prompts.`}
-                  triggerLabel="Delete"
-                  confirmLabel="Delete category"
+                  title="Удалить категорию?"
+                  description={`Категория «${category.name}» будет удалена и отвязана от промптов.`}
+                  triggerLabel="Удалить"
+                  confirmLabel="Удалить категорию"
                   testId={`delete-category-${category.slug}`}
                 />
               </CardContent>

@@ -12,7 +12,7 @@ function normalizeSiteUrl(value: string | undefined) {
 
 export const siteConfig = {
   name: "Prompt Atlas",
-  description: "A curated prompt catalog with clean public browsing and secure admin publishing.",
+  description: "Каталог готовых промптов с открытым просмотром и защищенной админ-панелью.",
   url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   adminEmail: (process.env.ADMIN_EMAIL ?? "admin@example.com").trim(),
 } as const;

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
   if (!data) {
     return {
-      title: "Prompt not found",
+      title: "Промпт не найден",
     };
   }
 
@@ -71,7 +71,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
     <article className="mx-auto w-full max-w-4xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
       <nav className="text-sm text-[color:var(--muted-foreground)]">
         <Link href="/prompts" className="hover:text-[color:var(--foreground)] hover:underline">
-          Prompts
+          Промпты
         </Link>
         <span className="mx-2">/</span>
         <span>{data.prompt.title}</span>
@@ -100,7 +100,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
 
       <section className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-xl font-semibold">Full prompt</h2>
+          <h2 className="text-xl font-semibold">Полный промпт</h2>
           <CopyPromptButton content={data.prompt.full_prompt_text} />
         </div>
 
@@ -111,7 +111,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
 
       {variables.length > 0 ? (
         <section className="space-y-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
-          <h2 className="text-xl font-semibold">Variables</h2>
+          <h2 className="text-xl font-semibold">Переменные</h2>
           <div className="grid gap-3 md:grid-cols-2">
             {variables.map((variable) => (
               <Card key={variable.name}>
@@ -120,24 +120,24 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
                 </CardHeader>
                 <CardContent className="space-y-1 text-sm text-[color:var(--muted-foreground)]">
                   <p>
-                    <span className="font-medium text-[color:var(--foreground)]">Name:</span> {variable.name}
+                    <span className="font-medium text-[color:var(--foreground)]">Имя:</span> {variable.name}
                   </p>
                   <p>
-                    <span className="font-medium text-[color:var(--foreground)]">Type:</span> {variable.type}
+                    <span className="font-medium text-[color:var(--foreground)]">Тип:</span> {variable.type}
                   </p>
                   <p>
-                    <span className="font-medium text-[color:var(--foreground)]">Required:</span>{" "}
-                    {variable.required ? "Yes" : "No"}
+                    <span className="font-medium text-[color:var(--foreground)]">Обязательное:</span>{" "}
+                    {variable.required ? "Да" : "Нет"}
                   </p>
                   {variable.placeholder ? (
                     <p>
-                      <span className="font-medium text-[color:var(--foreground)]">Placeholder:</span>{" "}
+                      <span className="font-medium text-[color:var(--foreground)]">Плейсхолдер:</span>{" "}
                       {variable.placeholder}
                     </p>
                   ) : null}
                   {variable.options?.length ? (
                     <p>
-                      <span className="font-medium text-[color:var(--foreground)]">Options:</span>{" "}
+                      <span className="font-medium text-[color:var(--foreground)]">Варианты:</span>{" "}
                       {variable.options.join(", ")}
                     </p>
                   ) : null}
@@ -150,7 +150,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
 
       {data.prompt.output_example ? (
         <section className="space-y-3 rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-6">
-          <h2 className="text-xl font-semibold">Output example</h2>
+          <h2 className="text-xl font-semibold">Пример результата</h2>
           <pre className="prose-prompt whitespace-pre-wrap text-sm text-[color:var(--foreground)]">
             {data.prompt.output_example}
           </pre>
@@ -159,7 +159,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
 
       {data.related.length > 0 ? (
         <section className="space-y-4">
-          <h2 className="text-2xl font-semibold">Related prompts</h2>
+          <h2 className="text-2xl font-semibold">Похожие промпты</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.related.map((prompt) => (
               <PromptCard key={prompt.id} prompt={prompt} />
@@ -170,7 +170,7 @@ export default async function PromptDetailPage({ params }: { params: Params }) {
 
       <div>
         <Link href="/prompts" className="text-sm font-medium underline-offset-4 hover:underline">
-          Back to catalog
+          Вернуться в каталог
         </Link>
       </div>
     </article>

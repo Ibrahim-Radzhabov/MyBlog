@@ -19,12 +19,12 @@ export default function GlobalError({
     <html>
       <body>
         <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center gap-4 px-6 text-center">
-          <h1 className="text-3xl font-semibold">Something went wrong</h1>
+          <h1 className="text-3xl font-semibold">Что-то пошло не так</h1>
           <p className="text-sm text-[color:var(--muted-foreground)]">
-            An unexpected issue occurred while rendering this page.
+            Во время отображения страницы произошла непредвиденная ошибка.
           </p>
           <Button type="button" onClick={() => reset()}>
-            Try again
+            Попробовать снова
           </Button>
         </main>
       </body>

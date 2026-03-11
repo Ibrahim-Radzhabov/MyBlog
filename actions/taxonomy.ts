@@ -9,27 +9,27 @@ import { logAdminEvent } from "@/lib/db/audit";
 import { slugify } from "@/lib/utils";
 
 const createCategorySchema = z.object({
-  name: z.string().trim().min(2, "Category name is required"),
+  name: z.string().trim().min(2, "Название категории обязательно"),
   slug: z.string().trim().optional(),
-  description: z.string().trim().max(300, "Description is too long").optional(),
+  description: z.string().trim().max(300, "Описание слишком длинное").optional(),
 });
 
 const updateCategorySchema = z.object({
   id: z.string().uuid(),
-  name: z.string().trim().min(2, "Category name is required"),
-  slug: z.string().trim().min(2, "Category slug is required"),
-  description: z.string().trim().max(300, "Description is too long").optional(),
+  name: z.string().trim().min(2, "Название категории обязательно"),
+  slug: z.string().trim().min(2, "Slug категории обязателен"),
+  description: z.string().trim().max(300, "Описание слишком длинное").optional(),
 });
 
 const createTagSchema = z.object({
-  name: z.string().trim().min(2, "Tag name is required"),
+  name: z.string().trim().min(2, "Название тега обязательно"),
   slug: z.string().trim().optional(),
 });
 
 const updateTagSchema = z.object({
   id: z.string().uuid(),
-  name: z.string().trim().min(2, "Tag name is required"),
-  slug: z.string().trim().min(2, "Tag slug is required"),
+  name: z.string().trim().min(2, "Название тега обязательно"),
+  slug: z.string().trim().min(2, "Slug тега обязателен"),
 });
 
 function fail(path: string, message: string): never {
@@ -55,13 +55,13 @@ export async function createCategoryAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    fail("/admin/categories", parsed.error.issues[0]?.message ?? "Invalid category data");
+    fail("/admin/categories", parsed.error.issues[0]?.message ?? "Некорректные данные категории");
   }
 
   const slug = slugify(parsed.data.slug || parsed.data.name);
 
   if (!slug) {
-    fail("/admin/categories", "Category slug cannot be empty");
+    fail("/admin/categories", "Slug категории не может быть пустым");
   }
 
   const { data: created, error } = await supabase
@@ -77,7 +77,7 @@ export async function createCategoryAction(formData: FormData) {
   if (error) {
     fail(
       "/admin/categories",
-      error.message.includes("duplicate") ? "Category slug already exists" : error.message
+      error.message.includes("duplicate") ? "Такой slug категории уже существует" : error.message
     );
   }
   await logAdminEvent({
@@ -93,7 +93,7 @@ export async function createCategoryAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/categories?toast=created&message=Category%20created");
+  redirect(`/admin/categories?toast=created&message=${encodeURIComponent("Категория создана")}`);
 }
 
 export async function updateCategoryAction(formData: FormData) {
@@ -107,7 +107,7 @@ export async function updateCategoryAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    fail("/admin/categories", parsed.error.issues[0]?.message ?? "Invalid category data");
+    fail("/admin/categories", parsed.error.issues[0]?.message ?? "Некорректные данные категории");
   }
 
   const { error } = await supabase
@@ -122,7 +122,7 @@ export async function updateCategoryAction(formData: FormData) {
   if (error) {
     fail(
       "/admin/categories",
-      error.message.includes("duplicate") ? "Category slug already exists" : error.message
+      error.message.includes("duplicate") ? "Такой slug категории уже существует" : error.message
     );
   }
   await logAdminEvent({
@@ -138,7 +138,7 @@ export async function updateCategoryAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/categories?toast=updated&message=Category%20updated");
+  redirect(`/admin/categories?toast=updated&message=${encodeURIComponent("Категория обновлена")}`);
 }
 
 export async function deleteCategoryAction(formData: FormData) {
@@ -146,7 +146,7 @@ export async function deleteCategoryAction(formData: FormData) {
 
   const id = formData.get("categoryId")?.toString();
   if (!id) {
-    fail("/admin/categories", "Missing category id");
+    fail("/admin/categories", "Не указан id категории");
   }
 
   const { data: existing } = await supabase.from("categories").select("slug, name").eq("id", id).maybeSingle();
@@ -168,7 +168,7 @@ export async function deleteCategoryAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/categories?toast=deleted&message=Category%20deleted");
+  redirect(`/admin/categories?toast=deleted&message=${encodeURIComponent("Категория удалена")}`);
 }
 
 export async function createTagAction(formData: FormData) {
@@ -180,13 +180,13 @@ export async function createTagAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    fail("/admin/tags", parsed.error.issues[0]?.message ?? "Invalid tag data");
+    fail("/admin/tags", parsed.error.issues[0]?.message ?? "Некорректные данные тега");
   }
 
   const slug = slugify(parsed.data.slug || parsed.data.name);
 
   if (!slug) {
-    fail("/admin/tags", "Tag slug cannot be empty");
+    fail("/admin/tags", "Slug тега не может быть пустым");
   }
 
   const { data: created, error } = await supabase
@@ -199,7 +199,7 @@ export async function createTagAction(formData: FormData) {
     .single();
 
   if (error) {
-    fail("/admin/tags", error.message.includes("duplicate") ? "Tag slug already exists" : error.message);
+    fail("/admin/tags", error.message.includes("duplicate") ? "Такой slug тега уже существует" : error.message);
   }
   await logAdminEvent({
     supabase,
@@ -214,7 +214,7 @@ export async function createTagAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/tags?toast=created&message=Tag%20created");
+  redirect(`/admin/tags?toast=created&message=${encodeURIComponent("Тег создан")}`);
 }
 
 export async function updateTagAction(formData: FormData) {
@@ -227,7 +227,7 @@ export async function updateTagAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    fail("/admin/tags", parsed.error.issues[0]?.message ?? "Invalid tag data");
+    fail("/admin/tags", parsed.error.issues[0]?.message ?? "Некорректные данные тега");
   }
 
   const { error } = await supabase
@@ -239,7 +239,7 @@ export async function updateTagAction(formData: FormData) {
     .eq("id", parsed.data.id);
 
   if (error) {
-    fail("/admin/tags", error.message.includes("duplicate") ? "Tag slug already exists" : error.message);
+    fail("/admin/tags", error.message.includes("duplicate") ? "Такой slug тега уже существует" : error.message);
   }
   await logAdminEvent({
     supabase,
@@ -254,7 +254,7 @@ export async function updateTagAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/tags?toast=updated&message=Tag%20updated");
+  redirect(`/admin/tags?toast=updated&message=${encodeURIComponent("Тег обновлен")}`);
 }
 
 export async function deleteTagAction(formData: FormData) {
@@ -263,7 +263,7 @@ export async function deleteTagAction(formData: FormData) {
   const id = formData.get("tagId")?.toString();
 
   if (!id) {
-    fail("/admin/tags", "Missing tag id");
+    fail("/admin/tags", "Не указан id тега");
   }
 
   const { data: existing } = await supabase.from("tags").select("slug, name").eq("id", id).maybeSingle();
@@ -285,5 +285,5 @@ export async function deleteTagAction(formData: FormData) {
   });
 
   revalidateTaxonomyPages();
-  redirect("/admin/tags?toast=deleted&message=Tag%20deleted");
+  redirect(`/admin/tags?toast=deleted&message=${encodeURIComponent("Тег удален")}`);
 }

@@ -25,7 +25,7 @@ export function CopyPromptButton({ content }: CopyPromptButtonProps) {
   return (
     <Button type="button" variant="secondary" onClick={handleCopy}>
       {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
-      {copied ? "Copied" : "Copy prompt"}
+      {copied ? "Скопировано" : "Копировать промпт"}
     </Button>
   );
 }

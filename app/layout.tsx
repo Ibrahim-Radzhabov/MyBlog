@@ -52,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={`${manrope.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
         {children}
         <Suspense fallback={null}>

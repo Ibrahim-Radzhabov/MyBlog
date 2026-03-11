@@ -18,14 +18,14 @@ type SearchParams = Promise<{
 }>;
 
 export const metadata: Metadata = {
-  title: "Prompts",
-  description: "Explore published prompts with fast search and category filtering.",
+  title: "Промпты",
+  description: "Изучайте опубликованные промпты с удобным поиском и фильтрами.",
   alternates: {
     canonical: "/prompts",
   },
   openGraph: {
-    title: "Prompts",
-    description: "Explore published prompts with fast search and category filtering.",
+    title: "Промпты",
+    description: "Изучайте опубликованные промпты с удобным поиском и фильтрами.",
     url: "/prompts",
   },
 };
@@ -71,9 +71,9 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
       <section className="space-y-3">
-        <h1 className="text-3xl font-semibold md:text-4xl">Prompt catalog</h1>
+        <h1 className="text-3xl font-semibold md:text-4xl">Каталог промптов</h1>
         <p className="max-w-2xl text-sm text-[color:var(--muted-foreground)]">
-          Browse only published prompts. Filter by category and tags to find the exact template you need.
+          Здесь отображаются только опубликованные промпты. Используйте фильтры по категориям и тегам, чтобы быстро найти нужный шаблон.
         </p>
       </section>
 
@@ -84,7 +84,7 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
               type="search"
               name="q"
               defaultValue={q}
-              placeholder="Search prompts"
+              placeholder="Поиск по промптам"
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             />
 
@@ -93,7 +93,7 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
               defaultValue={category}
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             >
-              <option value="">All categories</option>
+              <option value="">Все категории</option>
               {categories.map((item) => (
                 <option key={item.id} value={item.slug}>
                   {item.name}
@@ -106,7 +106,7 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
               defaultValue={tag}
               className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
             >
-              <option value="">All tags</option>
+              <option value="">Все теги</option>
               {tags.map((item) => (
                 <option key={item.id} value={item.slug}>
                   #{item.name}
@@ -114,18 +114,18 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
               ))}
             </select>
 
-            <Button type="submit">Apply</Button>
+            <Button type="submit">Применить</Button>
           </form>
         </CardContent>
       </Card>
 
       {catalog.items.length === 0 ? (
         <EmptyState
-          title="No prompts found"
-          description="Try clearing filters or using a broader search query."
+          title="Промпты не найдены"
+          description="Попробуйте сбросить фильтры или ввести более широкий поисковый запрос."
           action={
             <Button asChild variant="outline">
-              <Link href="/prompts">Clear filters</Link>
+              <Link href="/prompts">Сбросить фильтры</Link>
             </Button>
           }
         />
@@ -139,18 +139,18 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
 
           <div className="flex items-center justify-between gap-3 border-t border-[color:var(--border)] pt-4">
             <p className="text-sm text-[color:var(--muted-foreground)]">
-              Showing page {catalog.page} of {Math.max(catalog.pageCount, 1)}
+              Страница {catalog.page} из {Math.max(catalog.pageCount, 1)}
             </p>
             <div className="flex items-center gap-2">
               {catalog.page > 1 ? (
                 <Button asChild variant="outline" size="sm">
-                  <Link href={buildPageHref(activeParams, catalog.page - 1)}>Previous</Link>
+                  <Link href={buildPageHref(activeParams, catalog.page - 1)}>Назад</Link>
                 </Button>
               ) : null}
 
               {catalog.page < catalog.pageCount ? (
                 <Button asChild size="sm">
-                  <Link href={buildPageHref(activeParams, catalog.page + 1)}>Next</Link>
+                  <Link href={buildPageHref(activeParams, catalog.page + 1)}>Вперед</Link>
                 </Button>
               ) : null}
             </div>

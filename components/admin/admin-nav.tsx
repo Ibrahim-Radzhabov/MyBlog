@@ -18,7 +18,7 @@ export function AdminNav({ links }: AdminNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-col gap-1" aria-label="Admin sections">
+    <nav className="flex flex-col gap-1" aria-label="Разделы админки">
       {links.map((link) => {
         const isActive =
           pathname === link.href ||
