@@ -5,14 +5,15 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getRecentPrompts } from "@/lib/db/prompts";
-import { getAdminStats, getRecentAdminEvents } from "@/lib/db/stats";
+import { getAdminStats, getRecentAdminEvents, getSearchInsights } from "@/lib/db/stats";
 import { formatDate, formatDateTime } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
-  const [stats, recentPrompts, recentAdminEvents] = await Promise.all([
+  const [stats, recentPrompts, recentAdminEvents, searchInsights] = await Promise.all([
     getAdminStats(),
     getRecentPrompts(8),
     getRecentAdminEvents(8),
+    getSearchInsights(30, 8),
   ]);
 
   return (
@@ -141,6 +142,73 @@ export default async function AdminDashboardPage() {
             </CardContent>
           </Card>
         )}
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Топ поисковых запросов (30 дней)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {searchInsights.topQueries.length === 0 ? (
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                Пока нет поисковых запросов с текстом. После первых поисков здесь появится статистика.
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {searchInsights.topQueries.map((entry) => (
+                  <li
+                    key={entry.query}
+                    className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--border)] pb-3 last:border-0 last:pb-0"
+                  >
+                    <div>
+                      <p className="font-medium">{entry.query}</p>
+                      <p className="text-xs text-[color:var(--muted-foreground)]">
+                        Последний раз: {formatDateTime(entry.lastSearchedAt)}
+                      </p>
+                    </div>
+                    <div className="text-right text-sm">
+                      <p>{entry.searches} поисков</p>
+                      <p className="text-xs text-[color:var(--muted-foreground)]">
+                        без результатов: {entry.zeroResults}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Запросы без результатов (30 дней)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {searchInsights.zeroResultQueries.length === 0 ? (
+              <p className="text-sm text-[color:var(--muted-foreground)]">
+                Отлично: запросов без результатов пока нет.
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {searchInsights.zeroResultQueries.map((entry) => (
+                  <li
+                    key={entry.query}
+                    className="flex flex-wrap items-center justify-between gap-3 border-b border-[color:var(--border)] pb-3 last:border-0 last:pb-0"
+                  >
+                    <div>
+                      <p className="font-medium">{entry.query}</p>
+                      <p className="text-xs text-[color:var(--muted-foreground)]">
+                        Последний раз: {formatDateTime(entry.lastSearchedAt)}
+                      </p>
+                    </div>
+                    <p className="text-sm">{entry.misses} безрезультатных поисков</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardContent>
+        </Card>
       </section>
     </div>
   );

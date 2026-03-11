@@ -222,6 +222,45 @@ export type Database = {
           },
         ];
       };
+      search_events: {
+        Row: {
+          id: string;
+          query: string;
+          category_slug: string | null;
+          tag_slug: string | null;
+          results_count: number;
+          path: string;
+          session_id: string | null;
+          referrer: string | null;
+          user_agent: string | null;
+          searched_at: string;
+        };
+        Insert: {
+          id?: string;
+          query?: string;
+          category_slug?: string | null;
+          tag_slug?: string | null;
+          results_count?: number;
+          path?: string;
+          session_id?: string | null;
+          referrer?: string | null;
+          user_agent?: string | null;
+          searched_at?: string;
+        };
+        Update: {
+          id?: string;
+          query?: string;
+          category_slug?: string | null;
+          tag_slug?: string | null;
+          results_count?: number;
+          path?: string;
+          session_id?: string | null;
+          referrer?: string | null;
+          user_agent?: string | null;
+          searched_at?: string;
+        };
+        Relationships: [];
+      };
       admin_events: {
         Row: {
           id: string;

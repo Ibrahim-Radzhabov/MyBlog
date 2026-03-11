@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 
 import { EmptyState } from "@/components/shared/empty-state";
 import { PromptCard } from "@/components/public/prompt-card";
@@ -8,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { defaultPageSize } from "@/lib/constants";
 import { getAllCategories } from "@/lib/db/categories";
 import { getPromptCatalog } from "@/lib/db/prompts";
+import { recordSearchEvent } from "@/lib/db/stats";
 import { getAllTags } from "@/lib/db/tags";
 
 type SearchParams = Promise<{
@@ -67,6 +69,20 @@ export default async function PromptsPage({ searchParams }: { searchParams: Sear
   if (q) activeParams.set("q", q);
   if (category) activeParams.set("category", category);
   if (tag) activeParams.set("tag", tag);
+
+  const hasSearchIntent = Boolean(q || category || tag);
+  if (hasSearchIntent && page === 1) {
+    const requestHeaders = await headers();
+    await recordSearchEvent({
+      query: q,
+      categorySlug: category || undefined,
+      tagSlug: tag || undefined,
+      resultsCount: catalog.total,
+      path: "/prompts",
+      referrer: requestHeaders.get("referer") ?? undefined,
+      userAgent: requestHeaders.get("user-agent") ?? undefined,
+    });
+  }
 
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
