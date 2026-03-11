@@ -44,6 +44,7 @@ corepack pnpm dev
 - `SUPABASE_SERVICE_ROLE_KEY` (только сервер, никогда не в клиент)
 - `ADMIN_EMAIL`
 - `REVALIDATE_SECRET`
+- `GOOGLE_SITE_VERIFICATION` (опционально, для Google Search Console)
 
 Для e2e без skip:
 - `E2E_ADMIN_EMAIL`
@@ -118,6 +119,7 @@ PLAYWRIGHT_BASE_URL=https://my-blog-drab-eight.vercel.app corepack pnpm e2e
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `ADMIN_EMAIL`
 - `REVALIDATE_SECRET`
+- `GOOGLE_SITE_VERIFICATION` (если подтверждаете сайт через HTML-тег)
 
 ## 12. Важная структура проекта
 ```text
