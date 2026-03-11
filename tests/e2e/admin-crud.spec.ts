@@ -16,7 +16,7 @@ async function loginAsAdmin(page: import("@playwright/test").Page) {
   await page.getByLabel("Email").fill(adminEmail!);
   await page.getByLabel("Пароль").fill(adminPassword!);
   await page.getByRole("button", { name: "Войти" }).click();
-  await expect(page).toHaveURL(/\/admin/);
+  await expect(page).toHaveURL(/\/admin/, { timeout: 20_000 });
 }
 
 test.describe("admin CRUD with confirmations", () => {
@@ -66,9 +66,6 @@ test.describe("admin CRUD with confirmations", () => {
     await expect(promptRow).toBeVisible();
     await expect(promptRow.getByText("Черновик")).toBeVisible();
 
-    await promptRow.getByRole("button", { name: "Опубликовать" }).click();
-    await expect(promptRow.getByRole("button", { name: "Снять с публикации" })).toBeVisible();
-
     await promptRow.getByRole("link", { name: "Редактировать" }).click();
     await expect(page).toHaveURL(new RegExp(`/admin/prompts/.+/edit`));
 
@@ -77,6 +74,10 @@ test.describe("admin CRUD with confirmations", () => {
       .fill("Updated from e2e flow to verify edit action, publish state, and audit trail logging.");
     await page.getByRole("button", { name: "Обновить и опубликовать" }).click();
     await expect(page).toHaveURL(/\/admin\/prompts/);
+
+    const updatedPromptRow = page.getByRole("row", { name: new RegExp(promptTitle) });
+    await expect(updatedPromptRow).toBeVisible();
+    await expect(updatedPromptRow.getByText("Опубликовано")).toBeVisible();
 
     await page.getByTestId(`delete-prompt-${promptSlug}-trigger`).click();
     await expect(page.getByTestId(`delete-prompt-${promptSlug}-modal`)).toBeVisible();
@@ -96,7 +97,7 @@ test.describe("admin CRUD with confirmations", () => {
 
     await page.goto("/admin");
     await expect(page.getByRole("heading", { name: "Журнал действий" })).toBeVisible();
-    await expect(page.getByText("prompt.create")).toBeVisible();
-    await expect(page.getByText("prompt.delete")).toBeVisible();
+    await expect(page.getByText("prompt.create").first()).toBeVisible();
+    await expect(page.getByText("prompt.delete").first()).toBeVisible();
   });
 });

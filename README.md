@@ -1,124 +1,125 @@
 # Prompt Atlas MVP
 
-## 1. What this project is
-Prompt Atlas is a production-safe MVP prompt catalog built with Next.js App Router and Supabase. It has:
-- Public storefront (`/`, `/prompts`, `/prompts/[slug]`) for everyone.
-- Private admin area (`/admin`) for exactly one intended admin account.
-- Admin CRUD flows for prompts with draft/publish states.
-- Admin CRUD flows for categories and tags.
-- Confirm modals for destructive admin actions.
-- Audit trail (`admin_events`) for admin mutations and storage uploads.
+## 1. Что это за проект
+Prompt Atlas - production-ready MVP каталога промптов на Next.js App Router и Supabase.
 
-## 2. Tech stack
+В проекте уже реализовано:
+- публичная витрина (`/`, `/prompts`, `/prompts/[slug]`) для всех пользователей;
+- приватная админка (`/admin`) для одного администратора;
+- CRUD для промптов с состояниями `draft/published`;
+- CRUD для категорий и тегов;
+- подтверждение опасных действий (delete) через модальные окна;
+- журнал действий администратора (`admin_events`);
+- аналитика поиска каталога (`search_events`) с блоками на дашборде.
+
+## 2. Технологии
 - Next.js (App Router)
 - TypeScript
 - Tailwind CSS
-- shadcn/ui-style component primitives
+- shadcn/ui
 - Supabase (Postgres, Auth, Storage, RLS)
-- Vercel-ready deployment
+- Vercel (деплой)
 
-## 3. Local setup
-1. Install dependencies:
+## 3. Локальный запуск
+1. Установите зависимости:
 ```bash
 corepack pnpm install
 ```
-2. Copy env file:
+2. Скопируйте переменные окружения:
 ```bash
 cp .env.example .env.local
 ```
-3. Fill `.env.local` with your Supabase project values.
-4. Apply SQL migration and seed in Supabase SQL Editor (sections below).
-5. Run app:
+3. Заполните `.env.local` значениями вашего Supabase проекта.
+4. Примените миграции и seed в Supabase (см. разделы ниже).
+5. Запустите приложение:
 ```bash
 corepack pnpm dev
 ```
 
-## 4. Environment variables
-See `.env.example`:
+## 4. Переменные окружения
+Список находится в `.env.example`:
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+- `SUPABASE_SERVICE_ROLE_KEY` (только сервер, никогда не в клиент)
 - `ADMIN_EMAIL`
 - `REVALIDATE_SECRET`
 
-## 5. Supabase setup
-1. Create a Supabase project.
-2. In SQL Editor, run:
+Для e2e без skip:
+- `E2E_ADMIN_EMAIL`
+- `E2E_ADMIN_PASSWORD`
+
+## 5. Настройка Supabase
+1. Создайте проект в Supabase.
+2. В `SQL Editor` выполните по порядку:
 - `supabase/migrations/001_init.sql`
 - `supabase/migrations/002_admin_events.sql`
+- `supabase/migrations/003_search_events.sql`
 - `supabase/seed.sql`
-3. In Storage, confirm bucket `prompt-covers` exists and is public.
-4. In Authentication:
-- Enable Email + Password sign-in.
-- Disable public sign-up.
+3. В `Storage` проверьте bucket `prompt-covers` (public).
+4. В `Authentication`:
+- включите Email + Password sign-in;
+- отключите public sign-up.
 
-## 6. How to create the admin user
-1. In Supabase Auth, create a user with the exact email you set in `ADMIN_EMAIL`.
-2. Promote this user in SQL (replace email):
+## 6. Как назначить администратора
+1. В Supabase Auth создайте пользователя с email, который указан в `ADMIN_EMAIL`.
+2. Назначьте ему роль:
 ```sql
 update public.profiles
 set role = 'admin'
 where email = 'admin@example.com';
 ```
-3. Verify only this account can pass both checks:
+3. Доступ в админку проходит только при двух условиях:
 - `user.email === ADMIN_EMAIL`
 - `profiles.role = 'admin'`
 
-## 7. How to disable public sign-up
-Supabase Dashboard:
+## 7. Как отключить публичную регистрацию
+В Supabase Dashboard:
 - `Authentication` -> `Providers` -> `Email`
-- Turn off user self-registration / sign-up (keep sign-in enabled).
+- отключите self-signup (регистрацию), но оставьте sign-in включенным.
 
-## 8. How to run SQL migration and seed
-Use Supabase SQL Editor:
-1. Open and run `supabase/migrations/001_init.sql`
-2. Open and run `supabase/migrations/002_admin_events.sql`
-3. Open and run `supabase/seed.sql`
+## 8. Как применить миграции и seed
+Через Supabase SQL Editor:
+1. Выполните `supabase/migrations/001_init.sql`
+2. Выполните `supabase/migrations/002_admin_events.sql`
+3. Выполните `supabase/migrations/003_search_events.sql`
+4. Выполните `supabase/seed.sql`
 
-## 9. How to run locally
+## 9. Команды проверки качества
 ```bash
-corepack pnpm install
 corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm build
-corepack pnpm dev
 ```
 
-Optional e2e:
+Полный e2e:
 ```bash
 corepack pnpm e2e
 ```
 
-Optional admin-login e2e requires:
-- `E2E_ADMIN_EMAIL`
-- `E2E_ADMIN_PASSWORD`
+E2E по production URL:
+```bash
+set -a; source .env.local; set +a
+PLAYWRIGHT_BASE_URL=https://my-blog-drab-eight.vercel.app corepack pnpm e2e
+```
 
-## 10. How to deploy to Vercel
-1. Push repo to Git provider.
-2. Import project in Vercel.
-3. Set build command: `pnpm build` (default works).
-4. Set install command: `pnpm install` (default works).
-5. Add all environment variables from `.env.example`.
-6. Deploy.
+## 10. Деплой в Vercel
+1. Запушьте репозиторий в Git provider.
+2. Импортируйте проект в Vercel.
+3. Добавьте все env-переменные из `.env.example`.
+4. Для `NEXT_PUBLIC_SITE_URL` укажите production-домен.
+5. Запустите deploy.
 
-## 11. Production environment variables
-Set these in Vercel Project Settings -> Environment Variables:
-- `NEXT_PUBLIC_SITE_URL` = your production URL
+## 11. Production env в Vercel
+В `Project Settings -> Environment Variables` задайте:
+- `NEXT_PUBLIC_SITE_URL` = ваш production URL
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `ADMIN_EMAIL`
 - `REVALIDATE_SECRET`
 
-## 12. Future improvements
-- Add audit logs for admin actions.
-- Add optimistic UI and richer toast feedback for all forms.
-- Add image deletion cleanup on prompt deletion.
-- Add richer analytics dashboards and trend charts.
-- Add finer-grained role model beyond single-admin mode.
-
-## Important file tree
+## 12. Важная структура проекта
 ```text
 app/
   (public)/
@@ -143,8 +144,6 @@ actions/
   auth.ts
   prompts.ts
   taxonomy.ts
-components/
-  shared/confirm-action-modal.tsx
 lib/
   auth/require-admin.ts
   auth/session.ts
@@ -158,31 +157,36 @@ lib/
   db/tags.ts
   db/stats.ts
   validations/prompt.ts
-proxy.ts
-playwright.config.ts
 tests/e2e/
   admin-crud.spec.ts
-  public-auth.spec.ts
   admin-login.spec.ts
+  public-auth.spec.ts
 supabase/
   migrations/001_init.sql
   migrations/002_admin_events.sql
+  migrations/003_search_events.sql
   seed.sql
 ```
 
-## Final deployment checklist
-- [ ] Supabase migration applied (`001_init.sql`)
-- [ ] Supabase migration applied (`002_admin_events.sql`)
-- [ ] Seed applied (`seed.sql`)
-- [ ] Public sign-up disabled in Supabase Auth
-- [ ] Admin user exists and `profiles.role = 'admin'`
-- [ ] `ADMIN_EMAIL` matches the admin auth email exactly
-- [ ] Vercel env vars configured
-- [ ] `pnpm lint` passes
-- [ ] `pnpm typecheck` passes
-- [ ] `pnpm build` passes
-- [ ] Public catalog shows only published prompts
-- [ ] Non-admin users are denied `/admin`
+## 13. Финальный deployment checklist
+- [ ] Применены миграции `001_init.sql`, `002_admin_events.sql`, `003_search_events.sql`
+- [ ] Применен `supabase/seed.sql`
+- [ ] В Supabase Auth отключен public sign-up
+- [ ] Админ-пользователь создан и имеет `profiles.role = 'admin'`
+- [ ] `ADMIN_EMAIL` точно совпадает с email админа
+- [ ] Env-переменные в Vercel заполнены
+- [ ] `pnpm lint` проходит
+- [ ] `pnpm typecheck` проходит
+- [ ] `pnpm build` проходит
+- [ ] Public-каталог показывает только published промпты
+- [ ] Не-админ не попадает в `/admin`
+- [ ] `/robots.txt` и `/sitemap.xml` отдают `200`
+- [ ] Блоки аналитики поиска на `/admin` отображают данные
 
-For a complete release runbook, use:
+Полный релизный сценарий:
 - `docs/RELEASE_CHECKLIST.md`
+
+## 14. Идеи для дальнейшего развития
+- Удаление файлов cover из Storage при удалении промпта.
+- Более детальная продуктовая аналитика (тренды, воронка поиска).
+- Более гибкая ролевая модель (не только single-admin).

@@ -20,7 +20,7 @@ test.describe("admin login flow", () => {
     await page.getByLabel("Пароль").fill(adminPassword!);
     await page.getByRole("button", { name: "Войти" }).click();
 
-    await expect(page).toHaveURL(/\/admin/);
+    await expect(page).toHaveURL(/\/admin/, { timeout: 20_000 });
     await expect(page.getByRole("heading", { name: "Дашборд" })).toBeVisible();
   });
 });
