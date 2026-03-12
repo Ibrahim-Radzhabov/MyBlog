@@ -41,6 +41,7 @@ type PromptFormInitialValues = {
   categoryId: string;
   tagIds: string[];
   status: "draft" | "published";
+  visibility: "public" | "hidden";
   coverImageUrl: string;
   seoTitle: string;
   seoDescription: string;
@@ -98,6 +99,7 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
   const [slug, setSlug] = useState(initialValues.slug);
   const [slugTouched, setSlugTouched] = useState(Boolean(initialValues.slug));
   const [status, setStatus] = useState<"draft" | "published">(initialValues.status);
+  const [visibility, setVisibility] = useState<"public" | "hidden">(initialValues.visibility);
   const [coverImageUrl, setCoverImageUrl] = useState(initialValues.coverImageUrl);
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set(initialValues.tagIds));
   const [variables, setVariables] = useState<VariableInput[]>(
@@ -168,6 +170,7 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
     <form action={action} className="space-y-8">
       {initialValues.promptId ? <input type="hidden" name="promptId" value={initialValues.promptId} /> : null}
       <input type="hidden" name="status" value={status} />
+      <input type="hidden" name="visibility" value={visibility} />
       <input type="hidden" name="tagIds" value={Array.from(selectedTags).join(",")} />
       <input type="hidden" name="variables" value={serializedVariables} />
       <input type="hidden" name="coverImageUrl" value={coverImageUrl} />
@@ -214,6 +217,20 @@ export function PromptForm({ action, categories, tags, initialValues, mode }: Pr
                 {category.name}
               </option>
             ))}
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="visibility">Видимость в каталоге</Label>
+          <select
+            id="visibility"
+            name="visibilityControl"
+            value={visibility}
+            onChange={(event) => setVisibility(event.target.value as "public" | "hidden")}
+            className="h-10 w-full rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
+          >
+            <option value="public">Видимый</option>
+            <option value="hidden">Скрытый</option>
           </select>
         </div>
 

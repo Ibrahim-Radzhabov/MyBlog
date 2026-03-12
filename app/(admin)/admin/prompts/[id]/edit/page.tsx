@@ -71,6 +71,7 @@ export default async function EditPromptPage({ params }: { params: Params }) {
           categoryId: prompt.category_id ?? "",
           tagIds: prompt.tag_ids,
           status: prompt.status,
+          visibility: prompt.visibility,
           coverImageUrl: prompt.cover_image_url ?? "",
           seoTitle: prompt.seo_title ?? "",
           seoDescription: prompt.seo_description ?? "",

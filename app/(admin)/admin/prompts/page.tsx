@@ -1,9 +1,14 @@
 import Link from "next/link";
 
-import { deletePromptAction, togglePromptStatusAction } from "@/actions/prompts";
+import {
+  deletePromptAction,
+  togglePromptStatusAction,
+  togglePromptVisibilityAction,
+} from "@/actions/prompts";
 import { ConfirmActionModal } from "@/components/shared/confirm-action-modal";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { VisibilityBadge } from "@/components/shared/visibility-badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -21,6 +26,7 @@ import { formatDate } from "@/lib/utils";
 type SearchParams = Promise<{
   q?: string;
   status?: "draft" | "published";
+  visibility?: "public" | "hidden";
   category?: string;
   page?: string;
 }>;
@@ -42,6 +48,8 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
   const params = await searchParams;
   const q = params.q?.trim() ?? "";
   const status = params.status === "draft" || params.status === "published" ? params.status : undefined;
+  const visibility =
+    params.visibility === "public" || params.visibility === "hidden" ? params.visibility : undefined;
   const category = params.category?.trim() ?? "";
   const page = Math.max(1, Number(params.page ?? "1") || 1);
 
@@ -49,6 +57,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
     getPromptCatalog({
       search: q || undefined,
       status,
+      visibility,
       categorySlug: category || undefined,
       includeDrafts: true,
       page,
@@ -60,6 +69,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
   const activeParams = new URLSearchParams();
   if (q) activeParams.set("q", q);
   if (status) activeParams.set("status", status);
+  if (visibility) activeParams.set("visibility", visibility);
   if (category) activeParams.set("category", category);
 
   return (
@@ -74,7 +84,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
         </Button>
       </div>
 
-      <form className="grid gap-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-4 md:grid-cols-[1fr_180px_200px_auto]">
+      <form className="grid gap-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--background)] p-4 md:grid-cols-[1fr_170px_170px_200px_auto]">
         <input
           type="search"
           name="q"
@@ -106,6 +116,16 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
           ))}
         </select>
 
+        <select
+          name="visibility"
+          defaultValue={visibility ?? ""}
+          className="h-10 rounded-md border border-[color:var(--border)] bg-[color:var(--background)] px-3 text-sm"
+        >
+          <option value="">Любая видимость</option>
+          <option value="public">Виден</option>
+          <option value="hidden">Скрыт</option>
+        </select>
+
         <Button type="submit">Применить</Button>
       </form>
 
@@ -128,6 +148,7 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
                 <TableHead>Slug</TableHead>
                 <TableHead>Категория</TableHead>
                 <TableHead>Статус</TableHead>
+                <TableHead>Видимость</TableHead>
                 <TableHead>Обновлено</TableHead>
                 <TableHead className="text-right">Действия</TableHead>
               </TableRow>
@@ -141,6 +162,9 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
                   <TableCell>
                     <StatusBadge status={prompt.status} />
                   </TableCell>
+                  <TableCell>
+                    <VisibilityBadge visibility={prompt.visibility} />
+                  </TableCell>
                   <TableCell className="text-[color:var(--muted-foreground)]">{formatDate(prompt.updated_at)}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap items-center justify-end gap-2">
@@ -152,6 +176,13 @@ export default async function AdminPromptsPage({ searchParams }: { searchParams:
                         <input type="hidden" name="promptId" value={prompt.id} />
                         <Button type="submit" size="sm" variant="secondary">
                           {prompt.status === "published" ? "Снять с публикации" : "Опубликовать"}
+                        </Button>
+                      </form>
+
+                      <form action={togglePromptVisibilityAction}>
+                        <input type="hidden" name="promptId" value={prompt.id} />
+                        <Button type="submit" size="sm" variant="outline">
+                          {prompt.visibility === "public" ? "Скрыть" : "Показать"}
                         </Button>
                       </form>
 

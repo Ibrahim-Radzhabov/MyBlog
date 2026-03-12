@@ -39,6 +39,7 @@ export const promptFormSchema = z.object({
   tagIds: z.array(z.string().uuid()).default([]),
   variables: z.array(promptVariableSchema).default([]),
   status: z.enum(["draft", "published"]),
+  visibility: z.enum(["public", "hidden"]).default("public"),
   coverImageUrl: z.string().trim().url("URL обложки должен быть корректным").optional().or(z.literal("")),
   seoTitle: z.string().trim().max(70, "SEO-заголовок должен быть не длиннее 70 символов").optional(),
   seoDescription: z

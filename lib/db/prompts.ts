@@ -9,6 +9,7 @@ type PromptListRow = Pick<
   | "slug"
   | "short_description"
   | "status"
+  | "visibility"
   | "cover_image_url"
   | "updated_at"
   | "published_at"
@@ -21,6 +22,7 @@ type PromptCard = {
   slug: string;
   short_description: string;
   status: "draft" | "published";
+  visibility: "public" | "hidden";
   cover_image_url: string | null;
   updated_at: string;
   published_at: string | null;
@@ -44,6 +46,7 @@ type CatalogFilters = {
   pageSize?: number;
   includeDrafts?: boolean;
   status?: "draft" | "published";
+  visibility?: "public" | "hidden";
 };
 
 async function getCategoryIdBySlug(slug: string | undefined) {
@@ -130,6 +133,7 @@ async function enrichPromptRows(rows: PromptListRow[]): Promise<PromptCard[]> {
     slug: row.slug,
     short_description: row.short_description,
     status: row.status,
+    visibility: row.visibility,
     cover_image_url: row.cover_image_url,
     updated_at: row.updated_at,
     published_at: row.published_at,
@@ -148,6 +152,7 @@ export async function getPromptCatalog(filters: CatalogFilters = {}) {
     pageSize = 12,
     includeDrafts = false,
     status,
+    visibility,
   } = filters;
 
   const categoryId = await getCategoryIdBySlug(categorySlug);
@@ -187,18 +192,25 @@ export async function getPromptCatalog(filters: CatalogFilters = {}) {
   let dataQuery = supabase
     .from("prompts")
     .select(
-      "id, title, slug, short_description, status, cover_image_url, category_id, published_at, updated_at"
+      "id, title, slug, short_description, status, visibility, cover_image_url, category_id, published_at, updated_at"
     )
     .order("updated_at", { ascending: false });
 
   if (!includeDrafts) {
     countQuery = countQuery.eq("status", "published");
     dataQuery = dataQuery.eq("status", "published");
+    countQuery = countQuery.eq("visibility", "public");
+    dataQuery = dataQuery.eq("visibility", "public");
   }
 
   if (status) {
     countQuery = countQuery.eq("status", status);
     dataQuery = dataQuery.eq("status", status);
+  }
+
+  if (visibility) {
+    countQuery = countQuery.eq("visibility", visibility);
+    dataQuery = dataQuery.eq("visibility", visibility);
   }
 
   if (categoryId) {
@@ -264,6 +276,7 @@ export async function getPromptBySlug(slug: string) {
     .select("*")
     .eq("slug", slug)
     .eq("status", "published")
+    .eq("visibility", "public")
     .maybeSingle();
 
   if (error) {
@@ -280,6 +293,7 @@ export async function getPromptBySlug(slug: string) {
     slug: prompt.slug,
     short_description: prompt.short_description,
     status: prompt.status,
+    visibility: prompt.visibility,
     cover_image_url: prompt.cover_image_url,
     updated_at: prompt.updated_at,
     published_at: prompt.published_at,
@@ -290,8 +304,11 @@ export async function getPromptBySlug(slug: string) {
 
   const relatedQuery = supabase
     .from("prompts")
-    .select("id, title, slug, short_description, status, cover_image_url, category_id, published_at, updated_at")
+    .select(
+      "id, title, slug, short_description, status, visibility, cover_image_url, category_id, published_at, updated_at"
+    )
     .eq("status", "published")
+    .eq("visibility", "public")
     .neq("id", prompt.id)
     .order("published_at", { ascending: false })
     .limit(3);

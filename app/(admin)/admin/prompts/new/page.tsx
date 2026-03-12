@@ -27,6 +27,7 @@ export default async function NewPromptPage() {
           categoryId: "",
           tagIds: [],
           status: "draft",
+          visibility: "public",
           coverImageUrl: "",
           seoTitle: "",
           seoDescription: "",

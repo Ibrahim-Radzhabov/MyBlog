@@ -26,6 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .from("prompts")
       .select("slug, updated_at")
       .eq("status", "published")
+      .eq("visibility", "public")
       .order("updated_at", { ascending: false });
 
     if (!data?.length) {

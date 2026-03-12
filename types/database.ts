@@ -101,6 +101,7 @@ export type Database = {
           variables_json: Json;
           category_id: string | null;
           status: "draft" | "published";
+          visibility: "public" | "hidden";
           cover_image_url: string | null;
           seo_title: string | null;
           seo_description: string | null;
@@ -120,6 +121,7 @@ export type Database = {
           variables_json?: Json;
           category_id?: string | null;
           status?: "draft" | "published";
+          visibility?: "public" | "hidden";
           cover_image_url?: string | null;
           seo_title?: string | null;
           seo_description?: string | null;
@@ -139,6 +141,7 @@ export type Database = {
           variables_json?: Json;
           category_id?: string | null;
           status?: "draft" | "published";
+          visibility?: "public" | "hidden";
           cover_image_url?: string | null;
           seo_title?: string | null;
           seo_description?: string | null;
@@ -316,6 +319,7 @@ export type Database = {
     Enums: {
       profile_role: "admin" | "user";
       prompt_status: "draft" | "published";
+      prompt_visibility: "public" | "hidden";
     };
     CompositeTypes: {
       [_ in never]: never;

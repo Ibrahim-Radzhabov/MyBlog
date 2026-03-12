@@ -7,6 +7,7 @@ Prompt Atlas - production-ready MVP каталога промптов на Next.
 - публичная витрина (`/`, `/prompts`, `/prompts/[slug]`) для всех пользователей;
 - приватная админка (`/admin`) для одного администратора;
 - CRUD для промптов с состояниями `draft/published`;
+- переключение видимости промптов `public/hidden` без снятия публикации;
 - CRUD для категорий и тегов;
 - подтверждение опасных действий (delete) через модальные окна;
 - журнал действий администратора (`admin_events`);
@@ -56,6 +57,7 @@ corepack pnpm dev
 - `supabase/migrations/001_init.sql`
 - `supabase/migrations/002_admin_events.sql`
 - `supabase/migrations/003_search_events.sql`
+- `supabase/migrations/004_prompt_visibility.sql`
 - `supabase/seed.sql`
 3. В `Storage` проверьте bucket `prompt-covers` (public).
 4. В `Authentication`:
@@ -84,7 +86,8 @@ where email = 'admin@example.com';
 1. Выполните `supabase/migrations/001_init.sql`
 2. Выполните `supabase/migrations/002_admin_events.sql`
 3. Выполните `supabase/migrations/003_search_events.sql`
-4. Выполните `supabase/seed.sql`
+4. Выполните `supabase/migrations/004_prompt_visibility.sql`
+5. Выполните `supabase/seed.sql`
 
 ## 9. Команды проверки качества
 ```bash
@@ -101,7 +104,7 @@ corepack pnpm e2e
 E2E по production URL:
 ```bash
 set -a; source .env.local; set +a
-PLAYWRIGHT_BASE_URL=https://my-blog-drab-eight.vercel.app corepack pnpm e2e
+PLAYWRIGHT_BASE_URL=https://your-production-domain.vercel.app corepack pnpm e2e
 ```
 
 ## 10. Деплой в Vercel
@@ -167,11 +170,12 @@ supabase/
   migrations/001_init.sql
   migrations/002_admin_events.sql
   migrations/003_search_events.sql
+  migrations/004_prompt_visibility.sql
   seed.sql
 ```
 
 ## 13. Финальный deployment checklist
-- [ ] Применены миграции `001_init.sql`, `002_admin_events.sql`, `003_search_events.sql`
+- [ ] Применены миграции `001_init.sql`, `002_admin_events.sql`, `003_search_events.sql`, `004_prompt_visibility.sql`
 - [ ] Применен `supabase/seed.sql`
 - [ ] В Supabase Auth отключен public sign-up
 - [ ] Админ-пользователь создан и имеет `profiles.role = 'admin'`

@@ -53,6 +53,8 @@ function toPromptPayload(formData: FormData): PromptFormValues {
   const intent = formData.get("intent")?.toString();
   const explicitStatus = formData.get("status")?.toString();
   const status = explicitStatus === "published" || intent === "publish" ? "published" : "draft";
+  const explicitVisibility = formData.get("visibility")?.toString();
+  const visibility = explicitVisibility === "hidden" ? "hidden" : "public";
 
   return {
     title: formData.get("title")?.toString().trim() ?? "",
@@ -64,6 +66,7 @@ function toPromptPayload(formData: FormData): PromptFormValues {
     tagIds: parseTagIds(formData.get("tagIds")),
     variables: parseVariables(formData.get("variables")),
     status,
+    visibility,
     coverImageUrl: formData.get("coverImageUrl")?.toString().trim() ?? "",
     seoTitle: formData.get("seoTitle")?.toString().trim() ?? "",
     seoDescription: formData.get("seoDescription")?.toString().trim() ?? "",
@@ -85,6 +88,7 @@ function normalizePromptData(values: PromptFormValues) {
     variables_json: values.variables,
     category_id: values.categoryId || null,
     status: values.status,
+    visibility: values.visibility,
     cover_image_url: values.coverImageUrl || null,
     seo_title: values.seoTitle || null,
     seo_description: values.seoDescription || null,
@@ -160,6 +164,7 @@ export async function createPromptAction(formData: FormData) {
     entityRef: prompt.slug,
     metadata: {
       status: parsed.data.status,
+      visibility: parsed.data.visibility,
       tagCount: parsed.data.tagIds.length,
       categoryId: parsed.data.categoryId || null,
     },
@@ -229,6 +234,7 @@ export async function updatePromptAction(formData: FormData) {
     entityRef: updated.slug,
     metadata: {
       status: parsed.data.status,
+      visibility: parsed.data.visibility,
       tagCount: parsed.data.tagIds.length,
       categoryId: parsed.data.categoryId || null,
     },
@@ -323,6 +329,59 @@ export async function togglePromptStatusAction(formData: FormData) {
   redirect(
     `/admin/prompts?toast=status_changed&message=${encodeURIComponent(
       nextStatus === "published" ? "Промпт опубликован" : "Промпт переведен в черновик"
+    )}`
+  );
+}
+
+export async function togglePromptVisibilityAction(formData: FormData) {
+  const admin = await requireAdmin();
+  const promptId = formData.get("promptId")?.toString();
+
+  if (!promptId) {
+    redirect(`/admin/prompts?toast=form_error&message=${encodeURIComponent("Не указан id промпта")}`);
+  }
+
+  const { data: existing, error: readError } = await admin.supabase
+    .from("prompts")
+    .select("slug, visibility")
+    .eq("id", promptId)
+    .single();
+
+  if (readError || !existing) {
+    redirect(
+      `/admin/prompts?toast=form_error&message=${encodeURIComponent(readError?.message ?? "Промпт не найден")}`
+    );
+  }
+
+  const nextVisibility = existing.visibility === "public" ? "hidden" : "public";
+  const { error } = await admin.supabase
+    .from("prompts")
+    .update({
+      visibility: nextVisibility,
+    })
+    .eq("id", promptId);
+
+  if (error) {
+    redirect(`/admin/prompts?toast=form_error&message=${encodeURIComponent(error.message)}`);
+  }
+
+  await logAdminEvent({
+    supabase: admin.supabase,
+    adminId: admin.user.id,
+    action: nextVisibility === "hidden" ? "prompt.hide" : "prompt.show",
+    entityType: "prompt",
+    entityId: promptId,
+    entityRef: existing.slug,
+    metadata: {
+      previousVisibility: existing.visibility,
+      nextVisibility,
+    },
+  });
+
+  revalidatePromptPaths(existing.slug);
+  redirect(
+    `/admin/prompts?toast=status_changed&message=${encodeURIComponent(
+      nextVisibility === "hidden" ? "Промпт скрыт из каталога" : "Промпт снова виден в каталоге"
     )}`
   );
 }

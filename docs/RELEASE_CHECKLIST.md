@@ -25,6 +25,7 @@ E2E_ADMIN_EMAIL=... E2E_ADMIN_PASSWORD=... corepack pnpm e2e
    - `supabase/migrations/001_init.sql`
    - `supabase/migrations/002_admin_events.sql`
    - `supabase/migrations/003_search_events.sql`
+   - `supabase/migrations/004_prompt_visibility.sql`
 2. Примените seed:
    - `supabase/seed.sql`
 3. Проверьте Auth-настройки:
@@ -56,6 +57,7 @@ where email = 'admin@example.com';
 3. Admin CRUD:
    - создать draft промпт;
    - опубликовать промпт;
+   - переключить видимость (скрыть/показать);
    - отредактировать промпт;
    - удалить промпт через confirm modal.
 4. Taxonomy CRUD:

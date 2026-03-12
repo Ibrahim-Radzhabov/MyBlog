@@ -78,6 +78,15 @@ test.describe("admin CRUD with confirmations", () => {
     const updatedPromptRow = page.getByRole("row", { name: new RegExp(promptTitle) });
     await expect(updatedPromptRow).toBeVisible();
     await expect(updatedPromptRow.getByText("Опубликовано")).toBeVisible();
+    await expect(updatedPromptRow.getByText("Виден")).toBeVisible();
+
+    await updatedPromptRow.getByRole("button", { name: "Скрыть" }).click();
+    await expect(updatedPromptRow.getByText("Скрыт")).toBeVisible();
+    await expect(updatedPromptRow.getByRole("button", { name: "Показать" })).toBeVisible();
+
+    await updatedPromptRow.getByRole("button", { name: "Показать" }).click();
+    await expect(updatedPromptRow.getByText("Виден")).toBeVisible();
+    await expect(updatedPromptRow.getByRole("button", { name: "Скрыть" })).toBeVisible();
 
     await page.getByTestId(`delete-prompt-${promptSlug}-trigger`).click();
     await expect(page.getByTestId(`delete-prompt-${promptSlug}-modal`)).toBeVisible();
